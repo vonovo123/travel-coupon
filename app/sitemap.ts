@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
-import { platforms } from "@/data/mockData";
+import { listedPlatforms } from "@/data/mockData";
+import { offerTypeHubs } from "@/data/offerTypes";
 import { siteUrl } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -12,7 +13,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 1,
     },
-    ...platforms.map((platform) => ({
+    {
+      url: `${siteUrl}/privacy`,
+      lastModified,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    ...offerTypeHubs.map((hub) => ({
+      url: `${siteUrl}/${hub.slug}`,
+      lastModified,
+      changeFrequency: "daily" as const,
+      priority: 0.9,
+    })),
+    ...listedPlatforms.map((platform) => ({
       url: `${siteUrl}/${platform.slug}`,
       lastModified,
       changeFrequency: "daily" as const,

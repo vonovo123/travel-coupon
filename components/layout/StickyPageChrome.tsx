@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { BrandChrome } from "@/components/layout/BrandChrome";
 import { PlatformSidebar } from "@/components/layout/PlatformSidebar";
 import { useReviewFeedProgress } from "@/components/reviews/ReviewFeedProgress";
-import type { PlatformInfo } from "@/types/coupon";
+import type { OfferTypeInfo, PlatformInfo } from "@/types/coupon";
 
 const COMPACT_AFTER_PX = 48;
 const DESKTOP_MQ = "(min-width: 768px)";
@@ -12,11 +12,13 @@ const DESKTOP_MQ = "(min-width: 768px)";
 interface StickyPageChromeProps {
   currentSlug?: string;
   platform?: PlatformInfo;
+  offerHub?: OfferTypeInfo;
 }
 
 export function StickyPageChrome({
   currentSlug,
   platform,
+  offerHub,
 }: StickyPageChromeProps) {
   const [compact, setCompact] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -96,6 +98,7 @@ export function StickyPageChrome({
         <BrandChrome
           currentSlug={currentSlug}
           platform={platform}
+          offerHub={offerHub}
           compact={compact}
           menuOpen={menuOpen}
           onMenuToggle={() => setMenuOpen((open) => !open)}

@@ -6,6 +6,8 @@ interface SeoContentSectionProps {
   paymentTips: PaymentTip[];
   faqs: FaqItem[];
   activePlatform?: Platform;
+  /** 상품 허브(`/stay` 등)처럼 플랫폼이 아닐 때 섹션 제목 */
+  sectionLabel?: string;
 }
 
 export function SeoContentSection({
@@ -13,19 +15,21 @@ export function SeoContentSection({
   paymentTips,
   faqs,
   activePlatform,
+  sectionLabel,
 }: SeoContentSectionProps) {
+  const topic = activePlatform ?? sectionLabel;
   const guideHeading = activePlatform
     ? `${activePlatform} 할인 가이드`
-    : "플랫폼별 할인 가이드";
-  const paymentHeading = activePlatform
-    ? `${activePlatform} 결제·중복 할인`
+    : topic
+      ? `${topic} 가이드`
+      : "플랫폼별 할인 가이드";
+  const paymentHeading = topic
+    ? `${topic} 결제·중복 할인`
     : "결제 수단별 중복 할인";
-  const faqHeading = activePlatform
-    ? `${activePlatform} FAQ`
-    : "자주 묻는 질문";
-  const showPlatformLabel = !activePlatform;
-  const summary = activePlatform
-    ? `${activePlatform} 안내 · 가이드 · 결제 팁 · FAQ`
+  const faqHeading = topic ? `${topic} FAQ` : "자주 묻는 질문";
+  const showPlatformLabel = !activePlatform && !sectionLabel;
+  const summary = topic
+    ? `${topic} 안내 · 가이드 · 결제 팁 · FAQ`
     : "할인코드 안내 · 가이드 · 결제 팁 · FAQ";
 
   return (

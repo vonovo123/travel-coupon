@@ -5,4 +5,6 @@ export { PageLoadingShell } from "./PageLoadingShell";
 export { PlatformLoading } from "./PlatformLoading";
 export { PlatformSidebar } from "./PlatformSidebar";
 export { PlatformSidebarRail } from "./PlatformSidebarRail";
+export { SimplePageFrame } from "./SimplePageFrame";
+export { SiteFooter } from "./SiteFooter";
 export { StickyPageChrome } from "./StickyPageChrome";

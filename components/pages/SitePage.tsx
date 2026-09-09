@@ -1,13 +1,16 @@
 import { CouponList } from "@/components/coupons/CouponList";
 import { PlatformSidebarRail } from "@/components/layout/PlatformSidebarRail";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 import { ReviewFeedProgressProvider } from "@/components/reviews/ReviewFeedProgress";
 import { StickyPageChrome } from "@/components/layout/StickyPageChrome";
 import { ReviewInfiniteList } from "@/components/reviews/ReviewInfiniteList";
 import { ReviewSeoSection } from "@/components/reviews/ReviewSeoSection";
+import { CouponInternalLinks } from "@/components/seo-ui/CouponInternalLinks";
 import { JsonLd } from "@/components/seo-ui/JsonLd";
 import { SeoContentSection } from "@/components/seo-ui/SeoContentSection";
 import { reviewSeoFaqs } from "@/data/reviews/reviewSeoContent";
 import {
+  getCouponsByOfferHub,
   getCouponsByPlatform,
   getFaqsByPlatform,
   getGuidesByPlatform,
@@ -15,52 +18,100 @@ import {
   getPlatformBySlug,
   getReviews,
 } from "@/data/mockData";
+import {
+  getFaqsByOfferHub,
+  getGuidesByOfferHub,
+  getOfferTypeBySlug,
+} from "@/data/offerTypes";
 import type { ReviewPost } from "@/types/coupon";
 
 interface SitePageProps {
   platformSlug?: string;
+  offerHubSlug?: string;
   /** 홈에서 RSS로 가져온 항해일지. 없으면 더미로 폴백. */
   reviews?: ReviewPost[];
 }
 
 export function SitePage({
   platformSlug,
+  offerHubSlug,
   reviews: reviewsProp,
 }: SitePageProps) {
   const platform = platformSlug ? getPlatformBySlug(platformSlug) : undefined;
-  const isHome = !platform;
-  const coupons = getCouponsByPlatform(platformSlug);
+  const offerHub = offerHubSlug ? getOfferTypeBySlug(offerHubSlug) : undefined;
+  const isHome = !platform && !offerHub;
+  const coupons = offerHub
+    ? getCouponsByOfferHub(offerHub)
+    : getCouponsByPlatform(platformSlug);
   const reviews = isHome
     ? reviewsProp && reviewsProp.length > 0
       ? reviewsProp
       : getReviews()
     : [];
-  const guides = isHome ? [] : getGuidesByPlatform(platformSlug);
-  const pagePaymentTips = isHome ? [] : getPaymentTipsByPlatform(platformSlug);
-  const pageFaqs = isHome ? reviewSeoFaqs : getFaqsByPlatform(platformSlug);
-  const jsonLdName = platform
-    ? `코드세이아 · ${platform.name} 할인코드`
-    : "코드세이아 · 여행 후기";
-  const jsonLdDescription = platform
-    ? `코드세이아에서 찾은 ${platform.name} 할인코드`
-    : "코드세이아 항해일지에 남긴 여행 후기";
-  const path = platform ? `/${platform.slug}` : "/";
+  const guides = offerHub
+    ? getGuidesByOfferHub(offerHub)
+    : isHome
+      ? []
+      : getGuidesByPlatform(platformSlug);
+  const pagePaymentTips =
+    isHome || offerHub ? [] : getPaymentTipsByPlatform(platformSlug);
+  const pageFaqs = isHome
+    ? reviewSeoFaqs
+    : offerHub
+      ? getFaqsByOfferHub(offerHub)
+      : getFaqsByPlatform(platformSlug);
+  const jsonLdName = offerHub
+    ? `코드세이아 · ${offerHub.label}`
+    : platform
+      ? `코드세이아 · ${platform.name} 할인코드`
+      : "코드세이아 · 여행 후기";
+  const jsonLdDescription = offerHub
+    ? offerHub.shortDescription
+    : platform
+      ? `코드세이아에서 찾은 ${platform.name} 할인코드`
+      : "코드세이아 항해일지에 남긴 여행 후기";
+  const currentSlug = offerHub?.slug ?? platformSlug;
+  const path = currentSlug ? `/${currentSlug}` : "/";
+  const listHeading = offerHub
+    ? `${offerHub.label} ${coupons.length}개`
+    : `${platform?.name} 할인코드 ${coupons.length}개`;
+  const breadcrumbs = [
+    { name: "여행 후기", path: "/" },
+    ...(offerHub
+      ? [{ name: offerHub.label, path }]
+      : platform
+        ? [{ name: `${platform.name} 할인코드`, path }]
+        : []),
+  ];
 
   const pageBody = (
     <>
-      <StickyPageChrome currentSlug={platformSlug} platform={platform} />
+      <StickyPageChrome
+        currentSlug={currentSlug}
+        platform={platform}
+        offerHub={offerHub}
+      />
 
       <div className="mx-auto grid max-w-6xl gap-4 px-4 py-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
         <div className="min-w-0">
           <main>
             {isHome ? (
-              <ReviewInfiniteList reviews={reviews} />
+              <>
+                <ReviewInfiniteList reviews={reviews} />
+                <CouponInternalLinks variant="home" />
+              </>
             ) : (
               <>
-                <p className="mb-2 text-sm text-deep-navy/45">
-                  할인코드 {coupons.length}개
-                </p>
+                <h2 className="mb-2 font-serif text-sm font-semibold text-deep-navy/70">
+                  {listHeading}
+                </h2>
                 <CouponList coupons={coupons} />
+                <CouponInternalLinks
+                  variant={offerHub ? "hub" : "platform"}
+                  offerHub={offerHub}
+                  platform={platform}
+                  coupons={coupons}
+                />
               </>
             )}
           </main>
@@ -72,15 +123,18 @@ export function SitePage({
               paymentTips={pagePaymentTips}
               faqs={pageFaqs}
               activePlatform={platform?.name}
+              sectionLabel={offerHub?.label}
             />
           )}
-          <footer className="border-t border-deep-navy/10 py-6 text-sm text-deep-navy/55">
-            {isHome
-              ? "카드를 누르면 후기 원문으로 이동합니다. 할인코드는 옆 메뉴(모바일은 상단 버튼)에서 플랫폼을 고르세요."
-              : "할인코드를 복사한 뒤, 해당 사이트 결제 화면에서 붙여넣으세요. 적용 조건은 플랫폼마다 다를 수 있습니다."}
-          </footer>
+          <SiteFooter
+            usageHint={
+              isHome
+                ? "카드를 누르면 후기 원문으로 이동합니다. 할인코드는 목록 아래 바로가기나 옆 메뉴에서 고르세요."
+                : "할인코드를 복사한 뒤, 해당 사이트 결제 화면에서 붙여넣으세요. 적용 조건은 플랫폼마다 다를 수 있습니다."
+            }
+          />
         </div>
-        <PlatformSidebarRail currentSlug={platformSlug} />
+        <PlatformSidebarRail currentSlug={currentSlug} />
       </div>
     </>
   );
@@ -94,6 +148,7 @@ export function SitePage({
         coupons={isHome ? [] : coupons}
         reviews={reviews}
         faqs={pageFaqs}
+        breadcrumbs={breadcrumbs}
       />
       {isHome ? (
         <ReviewFeedProgressProvider total={reviews.length}>

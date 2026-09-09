@@ -13,7 +13,7 @@ npm run build && npm start
 
 ---
 
-## 2026-09-08 진행 상태
+## 2026-09-09 진행 상태
 
 ### 완료
 
@@ -33,7 +33,7 @@ npm run build && npm start
 
 **플랫폼 할인코드**
 - `/hotelscom` `/tripcom` `/myrealtrip` `/agoda` `/klook` `/nol`
-- 테스트용 추가: `/expedia` `/booking` `/yanolja` `/yeogi` `/airbnb`
+- `/expedia` `/booking` `/yanolja` `/yeogi` `/airbnb` (가이드·결제팁·FAQ mock 포함, `listed: true`)
 - 쿠폰 가로바(복사 / GO), 플랫폼별 가이드·결제팁·FAQ
 - 데이터: `data/mockData.ts` (이후 DB 교체 예정)
 
@@ -46,15 +46,52 @@ npm run build && npm start
 **SEO**
 - 페이지별 메타, sitemap, robots, JSON-LD
 - 홈 메타는 RSS 제목 키워드 반영 (`buildHomeMetadataFromReviews`)
+- OG 이미지(홈/플랫폼 1200×630)
+- `/privacy` 제휴 고지·개인정보, 커스텀 404/에러, 후기 썸네일 `alt`
 
 ### 다음에 할 일
 
-1. Vercel 프로덕션 URL을 `NEXT_PUBLIC_SITE_URL`에 넣고 배포
-2. 실제 제휴 링크·쿠폰 코드·유효기간 교체
-3. DB 연동 (`getCouponsByPlatform` 등 getter만 교체)
-4. OG 이미지
-5. 테스트용으로 넣은 플랫폼(익스피디아 등) 정리 여부 결정
-6. Search Console / 네이버 서치어드바이저 등록
+1. ~~Vercel 배포 + `NEXT_PUBLIC_SITE_URL`~~ → https://travel-coupon.vercel.app
+2. 아래 **다음 기능 (SEO·UX)** 2순위부터 구현
+3. 실제 제휴 링크·쿠폰 코드·유효기간 교체
+4. DB 연동 (`getCouponsByPlatform` 등 getter만 교체)
+5. Search Console / 네이버 서치어드바이저 등록
+
+---
+
+## 다음 기능 (SEO·UX)
+
+메타·사이트맵·JSON-LD·아코디언 SEO는 이미 있음.  
+새 페이지를 많이 늘리기보다 **공유·신뢰·체류·얇은 콘텐츠**를 먼저 막는 방향.
+
+### 1순위 — 배포 직후 (SEO + UX) ✅ 완료
+
+| 항목 | 구현 |
+|---|---|
+| OG 이미지 (1200×630, 홈/플랫폼) | `app/opengraph-image.tsx`, `app/[platform]/opengraph-image.tsx` |
+| 테스트 플랫폼 정리 | 5곳도 mock 가이드·FAQ 채운 뒤 `listed: true`로 공개. 숨기려면 `listed: false` |
+| 제휴 고지 + 약관/개인정보 | 푸터 고지, `/privacy` |
+| 커스텀 404 / `error.tsx` | 홈·주요 플랫폼 링크 |
+| 후기 썸네일 `alt` | `{제목} 후기 썸네일` |
+
+### 2순위 — 체감 UX
+
+| 항목 | 왜 |
+|---|---|
+| 후기 키워드/목적지 필터 | 카드 칩(오사카·펜션 등)으로 걸러 무한 스크롤 부담 감소. `?q=`면 일부 SEO도 가능 |
+| 쿠폰 만료·카테고리 탭 | `validUntil` 실시간 만료 표시, 숙소/항공/투어 필터 |
+| 질문형 본문(접기 밖) | 할인코드 페이지만. 쿠폰 제목에서 검색형 질문 (`lib/searchQuestions.ts`). 후기는 RSS가 자주 바뀌어 제외 |
+| 맨 위로 / URL 공유 | 긴 후기 목록·공유 유입 |
+
+### 3순위 — 콘텐츠가 쌓인 뒤
+
+| 항목 | 왜 |
+|---|---|
+| 목적지 허브 (`/osaka` 등) | 「오사카 숙소 후기」롱테일. 후기가 외부 블로그라 지금은 상세 URL이 없음 |
+| `WebSite` / `Organization` / Breadcrumb JSON-LD | ✅ 절대 URL + `@id`로 페이지마다 출력 |
+| 개별 후기 상세 페이지 | **보류.** 네이버로 나가는 구조라 중복·얇은 콘텐츠가 되기 쉬움 |
+
+개별 후기 URL은 후기를 자체 본문으로 가져오기 전엔 만들지 않는다.
 
 ---
 
@@ -62,8 +99,10 @@ npm run build && npm start
 
 | URL | 역할 |
 |---|---|
-| `/` | 여행 후기(RSS) + 후기 SEO |
+| `/` | 여행 후기(RSS) + 후기 SEO + 할인코드 내부 링크 |
+| `/overseas-stay` 등 | 국내/해외 × 숙소·투어·항공·패키지 허브 |
 | `/[platform]` | 플랫폼별 할인코드 + 가이드/FAQ |
+| `/privacy` | 개인정보 처리방침·제휴 고지 |
 
 `app/[platform]/page.tsx`: `generateStaticParams` + `dynamicParams = false`  
 홈 `revalidate = 3600`(RSS), 플랫폼 `revalidate = 86400`.
@@ -82,6 +121,10 @@ npm run build && npm start
 ---
 
 ## Vercel 배포
+
+라이브: https://travel-coupon.vercel.app  
+대시보드: https://vercel.com/921014/travel-coupon  
+GitHub `main` 푸시 시 자동 배포.
 
 Next.js 기본 설정으로 배포 가능 (`vercel.json`에 framework 지정).
 
@@ -120,18 +163,19 @@ npm start
 ## 주요 구조 (기능별)
 
 ```
-app/                         라우트 (홈·플랫폼·sitemap/robots)
+app/                         라우트 (홈·플랫폼·privacy·sitemap/robots·OG)
 components/
-  layout/                    헤더/크롬·사이드바·로딩 셸
+  layout/                    헤더/크롬·사이드바·푸터·로딩 셸
   reviews/                   후기 카드·무한스크롤·후기 SEO
   coupons/                   할인코드 카드·목록
   seo-ui/                     JsonLd·공통 아코디언 SEO
   pages/SitePage.tsx         홈/플랫폼 페이지 조립
 data/
-  mockData.ts                플랫폼·쿠폰·가이드·FAQ
+  mockData.ts                플랫폼·쿠폰·가이드·FAQ (`listed`로 공개 여부)
   reviews/reviewSeoContent.ts
 lib/
   seo.ts
+  og/                        OG 이미지 렌더 + Pretendard 폰트
   reviews/                   RSS·키워드·홈 후기 fetch
 types/coupon.ts
 ```

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { platforms } from "@/data/mockData";
+import { offerTypeNames } from "@/data/offerTypes";
 import type { Coupon } from "@/types/coupon";
 
 interface CouponCardProps {
@@ -71,7 +72,9 @@ export function CouponCard({ coupon }: CouponCardProps) {
             <h3 className="font-serif text-[15px] font-semibold text-deep-navy">
               {coupon.title}
             </h3>
-            <span className="text-xs text-deep-navy/45">{coupon.category}</span>
+            <span className="text-xs text-deep-navy/45">
+              {offerTypeNames[coupon.offerType]} · {coupon.category}
+            </span>
           </div>
           <p className="truncate text-sm text-deep-navy/60">
             {coupon.platform} · {coupon.description} · {coupon.validUntil}

@@ -1,4 +1,10 @@
+import { absoluteUrl, organizationId, siteName, websiteId } from "@/lib/seo";
 import type { Coupon, FaqItem, ReviewPost } from "@/types/coupon";
+
+export interface BreadcrumbItem {
+  name: string;
+  path: string;
+}
 
 interface JsonLdProps {
   name: string;
@@ -7,6 +13,18 @@ interface JsonLdProps {
   coupons?: Coupon[];
   reviews?: ReviewPost[];
   faqs: FaqItem[];
+  breadcrumbs?: BreadcrumbItem[];
+}
+
+function toIsoDate(value: string): string | undefined {
+  const matched = value.match(/(\d{4})[.\-/](\d{1,2})[.\-/](\d{1,2})/);
+
+  if (!matched) {
+    return undefined;
+  }
+
+  const [, year, month, day] = matched;
+  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 }
 
 export function JsonLd({
@@ -16,16 +34,43 @@ export function JsonLd({
   coupons = [],
   reviews = [],
   faqs,
+  breadcrumbs = [],
 }: JsonLdProps) {
   const useReviews = reviews.length > 0;
   const items = useReviews ? reviews : coupons;
+  const pageUrl = absoluteUrl(path);
+  const homeUrl = absoluteUrl("/");
+
+  const organization = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": organizationId,
+    name: siteName,
+    url: homeUrl,
+    description:
+      "여행 할인코드를 찾아 헤매는 여행자의 종착지. 숙소·투어·항공 코드와 내돈내산 여행 후기를 안내합니다.",
+  };
+
+  const website = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": websiteId,
+    name: siteName,
+    url: homeUrl,
+    inLanguage: "ko-KR",
+    description:
+      "아고다·마이리얼트립·트립닷컴 등 여행 플랫폼 할인코드와 여행 후기를 한곳에서 확인하세요.",
+    publisher: {
+      "@id": organizationId,
+    },
+  };
 
   const itemList = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name,
     description,
-    url: path,
+    url: pageUrl,
     numberOfItems: items.length,
     itemListElement: useReviews
       ? reviews.map((review, index) => ({
@@ -37,7 +82,10 @@ export function JsonLd({
             description: review.excerpt,
             image: review.thumbnailUrl,
             url: review.blogUrl,
-            datePublished: review.publishedAt,
+            datePublished: toIsoDate(review.publishedAt),
+            publisher: {
+              "@id": organizationId,
+            },
           },
         }))
       : coupons.map((coupon, index) => ({
@@ -48,7 +96,8 @@ export function JsonLd({
             name: coupon.title,
             description: coupon.description,
             category: coupon.platform,
-            availabilityEnds: coupon.validUntil,
+            url: pageUrl,
+            availabilityEnds: toIsoDate(coupon.validUntil),
             seller: {
               "@type": "Organization",
               name: coupon.platform,
@@ -70,12 +119,45 @@ export function JsonLd({
     })),
   };
 
+  const crumbItems =
+    breadcrumbs.length > 0
+      ? breadcrumbs
+      : [
+          { name: "여행 후기", path: "/" },
+          ...(path !== "/" ? [{ name, path }] : []),
+        ];
+
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: crumbItems.map((crumb, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: crumb.name,
+      item: absoluteUrl(crumb.path),
+    })),
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organization) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(website) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+      />
+      {items.length > 0 ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }}
+        />
+      ) : null}
       {faqs.length > 0 && (
         <script
           type="application/ld+json"

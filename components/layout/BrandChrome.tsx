@@ -4,11 +4,12 @@ import Link from "next/link";
 import { Compass, Map as MapIcon, ScrollText, X } from "lucide-react";
 import { HeroShipDecoration } from "@/components/layout/HeroShipDecoration";
 import { getFreshness } from "@/lib/seo";
-import type { PlatformInfo } from "@/types/coupon";
+import type { OfferTypeInfo, PlatformInfo } from "@/types/coupon";
 
 interface BrandChromeProps {
   currentSlug?: string;
   platform?: PlatformInfo;
+  offerHub?: OfferTypeInfo;
   compact?: boolean;
   menuOpen?: boolean;
   onMenuToggle?: () => void;
@@ -24,23 +25,30 @@ const collapse =
 export function BrandChrome({
   currentSlug,
   platform,
+  offerHub,
   compact = false,
   menuOpen = false,
   onMenuToggle,
   reviewProgress,
 }: BrandChromeProps) {
   const { year, month } = getFreshness();
-  const pageTitle = platform
-    ? `${platform.name} 할인코드 ${month}월`
-    : `${year}년 코드세이아 여행 후기`;
-  const description = platform
-    ? `${year}년 ${month}월 기준. ${platform.name}의 숨겨진 할인 코드를 복사한 다음 결제창에 붙여넣으면 됩니다.`
-    : "코드세이아에 모은 여행 후기입니다. 카드를 누르면 원문으로 이동합니다. 할인코드는 메뉴에서 플랫폼을 골라 확인하세요.";
-  const badge = platform
-    ? `현재 항로 · ${platform.name}`
-    : reviewProgress && reviewProgress.total > 0
-      ? `${reviewProgress.total}개 후기 중 ${reviewProgress.visible}개 표시`
-      : "여행 후기 목록";
+  const pageTitle = offerHub
+    ? `${offerHub.label} ${month}월`
+    : platform
+      ? `${platform.name} 할인코드 ${month}월`
+      : `${year}년 코드세이아 여행 후기`;
+  const description = offerHub
+    ? `${year}년 ${month}월 기준. ${offerHub.shortDescription}`
+    : platform
+      ? `${year}년 ${month}월 기준. ${platform.name}의 숨겨진 할인 코드를 복사한 다음 결제창에 붙여넣으면 됩니다.`
+      : "코드세이아에 모은 여행 후기입니다. 카드를 누르면 원문으로 이동합니다. 할인코드는 메뉴에서 국내·해외 상품 또는 플랫폼을 골라 확인하세요.";
+  const badge = offerHub
+    ? `현재 항로 · ${offerHub.label}`
+    : platform
+      ? `현재 항로 · ${platform.name}`
+      : reviewProgress && reviewProgress.total > 0
+        ? `${reviewProgress.total}개 후기 중 ${reviewProgress.visible}개 표시`
+        : "여행 후기 목록";
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-deep-navy to-deep-navy-muted">

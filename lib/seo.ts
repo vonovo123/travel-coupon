@@ -1,12 +1,26 @@
 import type { Metadata } from "next";
-import type { PlatformInfo } from "@/types/coupon";
+import type { OfferTypeInfo, PlatformInfo } from "@/types/coupon";
 
 export const siteName = "코드세이아";
 export const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
 
+export const organizationId = `${siteUrl.replace(/\/$/, "")}/#organization`;
+export const websiteId = `${siteUrl.replace(/\/$/, "")}/#website`;
+
+/** JSON-LD·canonical용 절대 URL. `path`는 `/` 또는 `/agoda`. */
+export function absoluteUrl(path = "/"): string {
+  const base = siteUrl.replace(/\/$/, "");
+
+  if (!path || path === "/") {
+    return base;
+  }
+
+  return `${base}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
 export const defaultDescription =
-  "할인 코드를 찾아 헤매는 여행자의 종착지, 코드세이아. 아고다·마이리얼트립·트립닷컴·호텔스닷컴·클룩·Nol의 숨겨진 할인코드를 한곳에서 확인하세요.";
+  "할인 코드를 찾아 헤매는 여행자의 종착지, 코드세이아. 아고다·마이리얼트립·트립닷컴·호텔스닷컴·클룩·Nol·익스피디아·부킹닷컴·야놀자·여기어때·에어비앤비의 숨겨진 할인코드를 한곳에서 확인하세요.";
 
 export function getFreshness() {
   const now = new Date();
@@ -66,6 +80,7 @@ export function platformMetadata(platform: PlatformInfo): Metadata {
   const title = `${year}년 ${month}월 ${platform.name} 할인코드`;
   const description = `${year}년 ${month}월 기준 ${platform.name} 숙소·항공·투어 할인코드입니다. 코드세이아에서 복사한 뒤 결제창에 붙여넣으세요. ${defaultDescription}`;
   const path = `/${platform.slug}`;
+  const shouldIndex = platform.listed;
 
   return {
     title,
@@ -75,6 +90,45 @@ export function platformMetadata(platform: PlatformInfo): Metadata {
       `${platform.name} 쿠폰 ${month}월`,
       `${platform.name} 프로모션 코드`,
       `${platform.name} 추가 할인`,
+    ],
+    robots: {
+      index: shouldIndex,
+      follow: shouldIndex,
+    },
+    alternates: {
+      canonical: shouldIndex ? path : undefined,
+    },
+    openGraph: {
+      title: `${title} | ${siteName}`,
+      description,
+      locale: "ko_KR",
+      type: "website",
+      url: path,
+      siteName,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | ${siteName}`,
+      description,
+    },
+  };
+}
+
+export function offerTypeMetadata(hub: OfferTypeInfo): Metadata {
+  const { year, month } = getFreshness();
+  const title = `${year}년 ${month}월 ${hub.label}`;
+  const description = `${year}년 ${month}월 기준 ${hub.shortDescription} ${defaultDescription}`;
+  const path = `/${hub.slug}`;
+
+  return {
+    title,
+    description,
+    keywords: [
+      hub.searchKeyword,
+      `${hub.searchKeyword} ${year}`,
+      `${hub.name} 쿠폰 ${month}월`,
+      `${hub.label} ${month}월`,
+      "여행 할인코드",
     ],
     robots: {
       index: true,
@@ -95,6 +149,32 @@ export function platformMetadata(platform: PlatformInfo): Metadata {
       card: "summary_large_image",
       title: `${title} | ${siteName}`,
       description,
+    },
+  };
+}
+
+export function buildPrivacyMetadata(): Metadata {
+  const title = "개인정보 처리방침·제휴 고지";
+  const description =
+    "코드세이아 개인정보 처리방침과 제휴 링크 고지입니다. 회원가입 없이 후기·할인코드를 안내하며, 일부 링크는 제휴 링크일 수 있습니다.";
+
+  return {
+    title,
+    description,
+    robots: {
+      index: true,
+      follow: true,
+    },
+    alternates: {
+      canonical: "/privacy",
+    },
+    openGraph: {
+      title: `${title} | ${siteName}`,
+      description,
+      locale: "ko_KR",
+      type: "website",
+      url: "/privacy",
+      siteName,
     },
   };
 }

@@ -22,7 +22,7 @@ export function ReviewCard({ review, priority = false }: ReviewCardProps) {
       <div className="relative aspect-[16/10] w-full shrink-0 bg-deep-navy/5 sm:aspect-auto sm:h-auto sm:w-44 md:w-52">
         <Image
           src={review.thumbnailUrl}
-          alt=""
+          alt={`${review.title} 후기 썸네일`}
           fill
           priority={priority}
           loading={priority ? "eager" : "lazy"}

@@ -2,11 +2,13 @@ import type {
   Coupon,
   FaqItem,
   GuideItem,
+  OfferTypeInfo,
   PaymentTip,
   Platform,
   PlatformInfo,
   ReviewPost,
 } from "@/types/coupon";
+import { offerTypeHubs } from "@/data/offerTypes";
 
 export const platforms: PlatformInfo[] = [
   {
@@ -16,6 +18,7 @@ export const platforms: PlatformInfo[] = [
     textClass: "text-[#C62828]",
     affiliateLink: "https://www.hotels.com",
     initial: "H",
+    listed: true,
   },
   {
     name: "트립닷컴",
@@ -24,6 +27,7 @@ export const platforms: PlatformInfo[] = [
     textClass: "text-[#1A6AE0]",
     affiliateLink: "https://www.trip.com",
     initial: "T",
+    listed: true,
   },
   {
     name: "마이리얼트립",
@@ -32,6 +36,7 @@ export const platforms: PlatformInfo[] = [
     textClass: "text-[#0A8A96]",
     affiliateLink: "https://www.myrealtrip.com",
     initial: "M",
+    listed: true,
   },
   {
     name: "아고다",
@@ -40,6 +45,7 @@ export const platforms: PlatformInfo[] = [
     textClass: "text-[#5C2D91]",
     affiliateLink: "https://www.agoda.com",
     initial: "A",
+    listed: true,
   },
   {
     name: "클룩",
@@ -48,6 +54,7 @@ export const platforms: PlatformInfo[] = [
     textClass: "text-[#E64A19]",
     affiliateLink: "https://www.klook.com",
     initial: "K",
+    listed: true,
   },
   {
     name: "Nol",
@@ -56,6 +63,7 @@ export const platforms: PlatformInfo[] = [
     textClass: "text-[#E02A68]",
     affiliateLink: "https://www.nol.com",
     initial: "N",
+    listed: true,
   },
   {
     name: "익스피디아",
@@ -64,6 +72,7 @@ export const platforms: PlatformInfo[] = [
     textClass: "text-[#B38600]",
     affiliateLink: "https://www.expedia.co.kr",
     initial: "E",
+    listed: true,
   },
   {
     name: "부킹닷컴",
@@ -72,6 +81,7 @@ export const platforms: PlatformInfo[] = [
     textClass: "text-[#003580]",
     affiliateLink: "https://www.booking.com",
     initial: "B",
+    listed: true,
   },
   {
     name: "야놀자",
@@ -80,6 +90,7 @@ export const platforms: PlatformInfo[] = [
     textClass: "text-[#E02A68]",
     affiliateLink: "https://www.yanolja.com",
     initial: "Y",
+    listed: true,
   },
   {
     name: "여기어때",
@@ -88,6 +99,7 @@ export const platforms: PlatformInfo[] = [
     textClass: "text-[#E03A3A]",
     affiliateLink: "https://www.yeogi.com",
     initial: "여",
+    listed: true,
   },
   {
     name: "에어비앤비",
@@ -96,8 +108,25 @@ export const platforms: PlatformInfo[] = [
     textClass: "text-[#E0454A]",
     affiliateLink: "https://www.airbnb.co.kr",
     initial: "A",
+    listed: true,
   },
 ];
+
+const reservedOfferSlugs = new Set<string>(
+  offerTypeHubs.map((hub) => hub.slug),
+);
+const collidingPlatform = platforms.find((platform) =>
+  reservedOfferSlugs.has(platform.slug),
+);
+
+if (collidingPlatform) {
+  throw new Error(
+    `플랫폼 슬러그 "${collidingPlatform.slug}"는 상품 허브 URL과 겹칩니다.`,
+  );
+}
+
+export const listedPlatforms = platforms.filter((platform) => platform.listed);
+export const unlistedPlatforms = platforms.filter((platform) => !platform.listed);
 
 export const platformMap = Object.fromEntries(
   platforms.map((platform) => [platform.slug, platform]),
@@ -125,6 +154,7 @@ export const coupons: Coupon[] = [
   {
     id: "hotels-global-8",
     ...couponDefaults("호텔스닷컴"),
+    offerType: "stay",
     category: "해외",
     title: "전 세계 호텔 최대 8% 추가 할인",
     description: "회원가에서 추가 적용, 일부 특가 제외",
@@ -134,6 +164,7 @@ export const coupons: Coupon[] = [
   {
     id: "trip-flight-6",
     ...couponDefaults("트립닷컴"),
+    offerType: "flight",
     category: "공통",
     title: "전 세계 항공권 6% 할인",
     description: "국내선·국제선 모두 적용, 앱 결제 시 사용",
@@ -143,6 +174,7 @@ export const coupons: Coupon[] = [
   {
     id: "trip-stay-10",
     ...couponDefaults("트립닷컴"),
+    offerType: "stay",
     category: "해외",
     title: "해외 숙소 10% 할인",
     description: "2박 이상 예약 시, 결제 단계에서 코드 입력",
@@ -152,6 +184,7 @@ export const coupons: Coupon[] = [
   {
     id: "mrt-tour-10",
     ...couponDefaults("마이리얼트립"),
+    offerType: "tour",
     category: "해외",
     title: "해외 투어·티켓 10% 할인",
     description: "유럽·일본 투어 포함, 1인당 1회",
@@ -161,6 +194,7 @@ export const coupons: Coupon[] = [
   {
     id: "mrt-korea-8",
     ...couponDefaults("마이리얼트립"),
+    offerType: "tour",
     category: "국내",
     title: "국내 액티비티 8% 할인",
     description: "제주·부산 액티비티, 최소 결제 3만 원",
@@ -170,6 +204,7 @@ export const coupons: Coupon[] = [
   {
     id: "agoda-global-7",
     ...couponDefaults("아고다"),
+    offerType: "stay",
     category: "해외",
     title: "전 세계 호텔 최대 7% 추가 할인",
     description: "신규 가입자 대상, 결제 단계에서 적용",
@@ -179,6 +214,7 @@ export const coupons: Coupon[] = [
   {
     id: "agoda-korea-5",
     ...couponDefaults("아고다"),
+    offerType: "stay",
     category: "국내",
     title: "국내 호텔 추가 5% 할인",
     description: "2박 이상 예약 시, 특가 상품 일부 제외",
@@ -188,6 +224,7 @@ export const coupons: Coupon[] = [
   {
     id: "klook-asia-12",
     ...couponDefaults("클룩"),
+    offerType: "tour",
     category: "해외",
     title: "아시아 액티비티 12% 할인",
     description: "대만·홍콩·일본 투어·입장권 대상",
@@ -197,6 +234,7 @@ export const coupons: Coupon[] = [
   {
     id: "nol-stay-10",
     ...couponDefaults("Nol"),
+    offerType: "stay",
     category: "국내",
     title: "국내 숙소 10% 할인",
     description: "모텔·호텔·펜션, 주중 예약 시 사용",
@@ -206,6 +244,7 @@ export const coupons: Coupon[] = [
   {
     id: "expedia-hotel-7",
     ...couponDefaults("익스피디아"),
+    offerType: "stay",
     category: "해외",
     title: "해외 호텔 최대 7% 할인",
     description: "일부 특가·패키지 제외, 결제 시 코드 입력",
@@ -215,6 +254,7 @@ export const coupons: Coupon[] = [
   {
     id: "booking-stay-8",
     ...couponDefaults("부킹닷컴"),
+    offerType: "stay",
     category: "공통",
     title: "숙소 예약 8% 추가 할인",
     description: "신규·재방문 회원 대상, 일부 숙소 제외",
@@ -224,6 +264,7 @@ export const coupons: Coupon[] = [
   {
     id: "yanolja-motel-10",
     ...couponDefaults("야놀자"),
+    offerType: "stay",
     category: "국내",
     title: "모텔·호텔 10% 할인",
     description: "주중 예약, 핫딜 상품 제외될 수 있음",
@@ -233,6 +274,7 @@ export const coupons: Coupon[] = [
   {
     id: "yeogi-pension-8",
     ...couponDefaults("여기어때"),
+    offerType: "stay",
     category: "국내",
     title: "펜션·호텔 8% 할인",
     description: "앱·웹 결제 공통, 최소 결제금액 있을 수 있음",
@@ -242,10 +284,61 @@ export const coupons: Coupon[] = [
   {
     id: "airbnb-first-6",
     ...couponDefaults("에어비앤비"),
+    offerType: "stay",
     category: "해외",
     title: "첫 예약 최대 6% 할인",
     description: "신규 계정 대상, 조건은 결제 전 확인",
     code: "AIRBNB6",
+    validUntil: "2026.12.31까지",
+  },
+  {
+    id: "expedia-package-5",
+    ...couponDefaults("익스피디아"),
+    offerType: "package",
+    category: "해외",
+    title: "항공+호텔 패키지 5% 추가 할인",
+    description: "패키지 결제 시, 일부 특가 운임 제외",
+    code: "EXPACK5",
+    validUntil: "2026.11.30까지",
+  },
+  {
+    id: "booking-genius-6",
+    ...couponDefaults("부킹닷컴"),
+    offerType: "stay",
+    category: "해외",
+    title: "Genius 회원 추가 6% 할인",
+    description: "로그인 후 결제, 등급별 중복 제한 있을 수 있음",
+    code: "GENIUS6",
+    validUntil: "2026.12.15까지",
+  },
+  {
+    id: "yanolja-leisure-8",
+    ...couponDefaults("야놀자"),
+    offerType: "tour",
+    category: "국내",
+    title: "레저·입장권 8% 할인",
+    description: "숙소 쿠폰과 별도, 핫딜 티켓 제외될 수 있음",
+    code: "YANLEISURE8",
+    validUntil: "2026.11.30까지",
+  },
+  {
+    id: "yeogi-weekend-7",
+    ...couponDefaults("여기어때"),
+    offerType: "stay",
+    category: "국내",
+    title: "주말 숙소 7% 할인",
+    description: "금·토 체크인, 이미 큰 폭 특가는 제외될 수 있음",
+    code: "YEOGIWK7",
+    validUntil: "2026.12.15까지",
+  },
+  {
+    id: "airbnb-longstay-8",
+    ...couponDefaults("에어비앤비"),
+    offerType: "stay",
+    category: "공통",
+    title: "7박 이상 장기 숙박 8% 할인",
+    description: "호스트 설정에 따라 막힐 수 있음, 결제 전 확인",
+    code: "AIRLONG8",
     validUntil: "2026.12.31까지",
   },
 ];
@@ -298,6 +391,36 @@ export const platformGuides: GuideItem[] = [
     platform: "Nol",
     title: "Nol 국내 숙소 할인코드 사용법",
     body: "Nol(놀) 할인코드는 모텔·호텔·펜션 등 국내 숙소 결제 화면에서 쿠폰 적용 버튼을 누른 뒤 코드 직접 입력을 선택하면 됩니다. 주중/주말, 연박 여부에 따라 할인율이 달라질 수 있고, 이미 큰 폭으로 깎인 핫딜 상품은 코드가 거절되기도 합니다. 레저 티켓과 숙소 쿠폰이 분리되어 있으니 상품 종류를 확인하세요. 결제 수단 할인(카드, 페이)은 코드 적용 이후 단계에서 한 번 더 선택할 수 있습니다.",
+  },
+  {
+    id: "guide-expedia",
+    platform: "익스피디아",
+    title: "익스피디아 할인코드 적용 방법",
+    body: "익스피디아 할인코드는 숙소 검색 결과가 아니라 결제 직전 화면의 쿠폰/프로모션 코드 칸에 넣습니다. 항공+호텔 패키지 코드와 숙소 전용 코드가 나뉘어 있으니, 상품 유형을 먼저 확인하세요. 멤버 전용가·오늘의 특가는 이미 할인된 요금이라 코드가 거절되는 경우가 많습니다. 같은 숙소를 일반가에 코드를 넣었을 때와 특가를 비교하세요. 결제 통화가 USD면 카드사 해외수수료가 붙을 수 있어, KRW 결제가 가능한지 함께 봅니다.",
+  },
+  {
+    id: "guide-booking",
+    platform: "부킹닷컴",
+    title: "부킹닷컴 할인코드와 Genius 할인",
+    body: "부킹닷컴 코드는 예약 마지막 단계의 할인 코드/바우처 칸에 입력합니다. Genius 등급 할인이 이미 붙은 숙소는 추가 코드가 막히는 경우가 있으니, 로그인 전후 요금과 코드 적용가를 비교하세요. 일부 숙소는 코드를 넣으면 Genius 할인이 사라지기도 합니다. 모바일 앱 전용 코드는 웹 결제창에서 거절될 수 있습니다. 무료 취소 마감 시간과 선결제/현장결제 여부도 코드 적용 후에 한 번 더 확인하는 편이 안전합니다.",
+  },
+  {
+    id: "guide-yanolja",
+    platform: "야놀자",
+    title: "야놀자 숙소·레저 할인코드 사용법",
+    body: "야놀자 할인코드는 결제 화면에서 쿠폰 선택 → 코드 직접 입력으로 넣습니다. 모텔·호텔 숙소 코드와 레저·입장권 코드가 분리되어 있어, 숙소 결제창에 레저 코드를 넣으면 거절됩니다. 주중 전용 코드는 금·토 체크인에 막히고, 핫딜·타임세일 객실은 코드 제외 대상인 경우가 많습니다. 같은 숙소의 일반 요금+코드와 핫딜가를 비교하세요. 앱 쿠폰함과 웹 직접 입력 코드가 다를 수 있으니, 코드 설명의 앱 전용 여부를 확인합니다.",
+  },
+  {
+    id: "guide-yeogi",
+    platform: "여기어때",
+    title: "여기어때 할인코드 적용 방법",
+    body: "여기어때 코드는 숙소 결제 단계의 쿠폰/포인트 영역에서 코드 등록 후 적용합니다. 펜션·호텔 공통 코드와 주말 전용 코드가 있으니 체크인 요일을 먼저 보세요. 이미 큰 폭으로 깎인 특가·무한쿠폰 객실은 추가 코드가 안 되는 경우가 많습니다. 최소 결제 금액 조건이 있으면 코드 적용 전 금액 기준으로 통과 여부를 확인하세요. 앱과 웹 모두 되는 코드인지, 앱 전용인지도 설명에 적혀 있습니다.",
+  },
+  {
+    id: "guide-airbnb",
+    platform: "에어비앤비",
+    title: "에어비앤비 프로모션 코드 사용법",
+    body: "에어비앤비 코드는 결제 확인 화면의 쿠폰/프로모션 코드 입력란에 넣습니다. 첫 예약 전용 코드는 해당 계정으로 숙박을 완료한 이력이 있으면 거절됩니다. 7박 이상 장기 숙박 코드는 호스트가 할인을 막아 둔 숙소에서는 적용되지 않습니다. 서비스 수수료·청소비는 코드 할인 대상에서 빠지는 경우가 많아, 숙박 요금만 깎이는지 최종 내역을 확인하세요. 통화와 결제 수단을 바꾼 뒤 코드가 사라지면 같은 창에서 다시 붙여넣습니다.",
   },
 ];
 
@@ -383,6 +506,66 @@ export const paymentTips: PaymentTip[] = [
     platform: "Nol",
     title: "Nol 네이버페이·카카오페이 중복 할인",
     body: "Nol 국내 숙소는 할인코드 다음에 네이버페이·카카오페이·토스페이를 고르면 페이 즉시할인이 한 겹 더 붙는 경우가 많습니다. 핫딜 객실은 페이 쿠폰 제외 대상일 수 있으니, 코드만 넣었을 때와 페이까지 넣었을 때 금액이 같은지 보세요. 레저 티켓과 숙소를 한 번에 결제하면 페이 쿠폰이 한쪽 상품에만 적용되기도 합니다. 포인트 적립과 즉시할인을 동시에 쓰지 못하는 달이면 즉시할인 쪽이 보통 더 큽니다.",
+  },
+  {
+    id: "card-expedia",
+    platform: "익스피디아",
+    title: "익스피디아 카드 할인과 패키지 결제",
+    body: "익스피디아는 해외 숙소·패키지에서 신한·삼성카드 청구할인이 열리는 달이 있습니다. 항공+호텔 패키지는 숙소 전용 카드 이벤트가 빠질 수 있으니, 패키지 결제창의 카드 배너를 따로 확인하세요. 멤버 전용가에 코드를 넣으면 카드 할인 대상에서 제외되는 경우도 있습니다. 결제 통화가 USD면 해외이용수수료가 붙습니다. KRW로 바꿀 수 있는지, 코드 적용 후 무이자 할부가 되는지도 함께 보세요.",
+  },
+  {
+    id: "pay-expedia",
+    platform: "익스피디아",
+    title: "익스피디아에서 국내 페이가 안 보일 때",
+    body: "익스피디아 해외 숙소는 네이버페이·카카오페이가 결제 수단에 없는 경우가 많습니다. 페이 할인을 기대한 금액과 카드+할인코드 금액을 비교하고, 페이가 꼭 필요하면 같은 숙소를 페이 결제가 되는 다른 플랫폼과만 맞춰 보세요. 국내 호텔 일부는 페이 선택이 열리기도 하지만, 패키지 특가와는 중복이 잘 안 됩니다. 앱 인앱결제와 웹 결제 적립이 다를 수 있어 코드는 웹에서 한 번 더 확인하는 편이 안전합니다.",
+  },
+  {
+    id: "card-booking",
+    platform: "부킹닷컴",
+    title: "부킹닷컴 카드 할인과 Genius 중복",
+    body: "부킹닷컴은 해외 숙소 카드 청구할인·무이자 할부가 자주 열립니다. Genius 할인이 이미 붙은 예약은 카드 프로모션 대상에서 빠지는 달이 있으니, 코드+카드 합계와 Genius가만 비교하세요. 선결제 요금과 현장결제 요금의 카드 이벤트 대상이 다를 수 있습니다. 결제 통화가 현지 통화면 이중환전이 생길 수 있어, 가능하면 KRW 결제를 고르세요.",
+  },
+  {
+    id: "pay-booking",
+    platform: "부킹닷컴",
+    title: "부킹닷컴 페이 결제와 앱 전용가",
+    body: "부킹닷컴은 국내 페이 선택이 숙소마다 다릅니다. 페이가 보이면 코드 적용 → 페이 선택 순으로 금액이 바뀌는지 보고, 안 보이면 카드+Genius+코드 조합과만 비교하세요. 앱 전용가는 웹에서 페이를 골라도 같은 금액이 아닐 수 있습니다. 앱 쿠폰은 앱 결제에만 붙는 경우가 많으니, 코드 설명의 앱 전용 여부를 확인한 뒤 결제 창을 고르세요.",
+  },
+  {
+    id: "card-yanolja",
+    platform: "야놀자",
+    title: "야놀자 국내 카드 즉시할인",
+    body: "야놀자는 우리·신한 등 국내 카드 즉시할인이 숙소 결제창에 자주 뜹니다. 주중 예약과 주말·연박은 카드 이벤트 대상이 다를 수 있고, 핫딜 객실은 카드 할인이 빠진 채 결제되는 경우가 있습니다. 레저 티켓은 숙소 카드 프로모션과 별도이니, 숙소 결제창에서만 카드 배너를 확인하세요. 코드 적용 뒤에도 무이자 할부가 되는 편이고, 한도는 달마다 달라집니다.",
+  },
+  {
+    id: "pay-yanolja",
+    platform: "야놀자",
+    title: "야놀자 네이버페이·카카오페이 중복",
+    body: "야놀자 국내 숙소는 할인코드 다음에 네이버페이·카카오페이·토스페이를 고르면 페이 즉시할인이 한 겹 더 붙는 경우가 많습니다. 핫딜 객실은 페이 쿠폰 제외 대상일 수 있으니, 코드만 넣었을 때와 페이까지 넣었을 때 금액이 같은지 보세요. 레저와 숙소를 한 번에 결제하면 페이 쿠폰이 한쪽만 적용되기도 합니다. 포인트 적립과 즉시할인 중 하나만 되는 달이면 즉시할인 쪽이 보통 더 큽니다.",
+  },
+  {
+    id: "card-yeogi",
+    platform: "여기어때",
+    title: "여기어때 카드 할인과 주말 요금",
+    body: "여기어때는 국내 숙소 카드 즉시할인·청구할인이 자주 열립니다. 주말 전용 코드와 카드 할인을 같이 쓰는 예약이 있고, 이미 큰 특가 객실은 카드 이벤트에서 빠질 수 있습니다. 최소 결제 금액이 있는 코드는 카드 할인 전 금액 기준으로 통과 여부를 보세요. 결제 직전 카드 배너의 예상 할인액이 0원이면 그 객실은 대상이 아닙니다.",
+  },
+  {
+    id: "pay-yeogi",
+    platform: "여기어때",
+    title: "여기어때 네이버페이·카카오페이 즉시할인",
+    body: "여기어때는 코드 적용 후 네이버페이·카카오페이·토스페이를 고르면 페이 쿠폰이 한 번 더 뜨는 경우가 많습니다. 순서는 코드 → 페이 선택 → 페이 앱 쿠폰 확인입니다. 주말 체크인 특가와 페이 할인이 동시에 안 되는 객실이 있으니, 최종 결제액만 보고 고르면 됩니다. 앱 전용 페이 쿠폰은 웹 결제창에 안 보일 수 있습니다.",
+  },
+  {
+    id: "card-airbnb",
+    platform: "에어비앤비",
+    title: "에어비앤비 카드 결제와 수수료",
+    body: "에어비앤비는 국내 페이보다 카드 결제가 기본인 숙소가 많습니다. 카드 청구할인이 열려도 서비스 수수료·청소비는 할인 대상에서 빠지는 경우가 있어, 숙박 요금만 깎이는지 내역을 확인하세요. 첫 예약 코드와 카드 할인을 같이 쓰는 결제가 있고, 장기 숙박 할인과는 한쪽만 되는 호스트도 있습니다. 통화가 현지 통화면 해외수수료가 붙을 수 있습니다.",
+  },
+  {
+    id: "pay-airbnb",
+    platform: "에어비앤비",
+    title: "에어비앤비에서 페이가 안 될 때",
+    body: "에어비앤비는 네이버페이·카카오페이 선택이 없거나 국가·호스트에 따라 막히는 경우가 많습니다. 페이 할인을 기대한 금액과 카드+프로모션 코드 금액을 비교하세요. 페이가 꼭 필요하면 같은 일정의 호텔을 페이 결제가 되는 플랫폼과만 맞춰 보는 편이 낫습니다. 결제 수단을 바꾼 뒤 코드가 해제되면 쿠폰 칸에 다시 붙여넣으세요.",
   },
 ];
 
@@ -531,6 +714,111 @@ export const faqs: FaqItem[] = [
     answer:
       "대부분 1회성이라 무료 취소가 되는 객실이어도 코드가 자동으로 돌아오지 않습니다. 주중/주말 조건이 있는 코드는 취소 후 다시 넣어도 날짜가 바뀌면 거절될 수 있습니다. 일정 변경이 예상되면 무료 취소 마감 시간을 확인하고, 코드명과 예약번호를 남겨 두세요. 재발급 문의는 Nol 고객센터에 예약번호와 코드명을 함께 보내야 합니다.",
   },
+  {
+    id: "faq-expedia-where",
+    platform: "익스피디아",
+    question: "익스피디아 할인코드 입력란을 못 찾을 때는?",
+    answer:
+      "검색 결과가 아니라 결제 직전 화면의 쿠폰/프로모션 코드 칸에 있습니다. 패키지 예약은 숙소 전용 코드가 거절될 수 있으니 상품 유형을 먼저 보세요. 멤버 전용가·오늘의 특가는 코드 제외 대상인 경우가 많습니다. 칸이 없으면 해당 특가는 쿠폰을 받지 않는 요금입니다. 그래도 안 되면 쿠키를 지운 뒤 이 사이트의 익스피디아 전용 링크로 다시 들어와 같은 계정으로 결제하세요.",
+  },
+  {
+    id: "faq-expedia-package",
+    platform: "익스피디아",
+    question: "익스피디아 숙소 코드와 패키지 코드를 같이 쓸 수 있나요?",
+    answer:
+      "한 결제에 동시에 넣지 못합니다. 숙소만 예약할 때는 숙소 코드, 항공+호텔이면 패키지 코드를 쓰세요. 멤버가에 코드를 넣으면 특가 할인이 사라질 수 있어, 적용가와 미적용가를 비교하는 것이 좋습니다. 결제 통화가 USD면 카드 수수료까지 넣고 다른 플랫폼 최종가와 맞춰 보세요.",
+  },
+  {
+    id: "faq-expedia-refund",
+    platform: "익스피디아",
+    question: "익스피디아 취소 시 할인코드가 재발급되나요?",
+    answer:
+      "대부분 1회성이라 무료 취소 요금이어도 코드가 자동 복구되지 않습니다. 패키지는 항공 취소 규정과 숙소 규정이 따로라 코드 소멸 시점도 다를 수 있습니다. 일정 변경이 예상되면 환불 가능 요금을 고르고, 코드명과 예약번호를 남겨 두세요. 재발급 문의는 익스피디아 고객센터에 예약번호와 코드명을 함께 보내야 합니다.",
+  },
+  {
+    id: "faq-booking-genius",
+    platform: "부킹닷컴",
+    question: "부킹닷컴 Genius 할인과 코드를 같이 쓸 수 있나요?",
+    answer:
+      "같이 되는 숙소와, 코드를 넣는 순간 Genius 할인이 빠지는 숙소가 섞여 있습니다. 로그인 후 Genius가와, Genius를 끈 뒤 코드만 넣은 가를 비교하세요. 앱 전용 코드는 웹 결제창에서 거절될 수 있습니다. 코드는 예약 마지막 단계의 할인 코드/바우처 칸에 넣습니다.",
+  },
+  {
+    id: "faq-booking-pay",
+    platform: "부킹닷컴",
+    question: "부킹닷컴에서 선결제와 현장결제 중 어디에 코드가 되나요?",
+    answer:
+      "숙소마다 다릅니다. 선결제만 코드가 되는 곳과, 현장결제 요금에는 칸 자체가 없는 곳이 있습니다. 결제 방식을 바꾼 뒤 코드 칸이 사라지면 그 요금은 쿠폰 제외 대상입니다. 무료 취소 마감 시간도 선결제/현장결제에 따라 달라지니, 코드 적용 후에 한 번 더 확인하세요.",
+  },
+  {
+    id: "faq-booking-refund",
+    platform: "부킹닷컴",
+    question: "부킹닷컴 예약 취소 시 코드가 재발급되나요?",
+    answer:
+      "대부분 재발급되지 않습니다. 무료 취소 기간이어도 바우처 복구를 보장하지 않는 숙소가 많습니다. Genius 특가로 예약한 뒤 취소하면 같은 가가 다시 안 열릴 수도 있습니다. 일정 변경이 예상되면 환불 가능 요금을 고르고, 코드명과 예약번호를 남겨 두세요. 문의는 부킹닷컴 고객센터에 예약번호와 코드명을 함께 보내야 합니다.",
+  },
+  {
+    id: "faq-yanolja-hotdeal",
+    platform: "야놀자",
+    question: "야놀자 핫딜에서 할인코드가 거절될 때는?",
+    answer:
+      "이미 큰 폭으로 깎인 핫딜·타임세일 객실은 코드 제외 대상인 경우가 많습니다. 같은 숙소의 일반 요금에 코드를 넣었을 때와 핫딜가를 비교하세요. 코드는 결제 화면 쿠폰 선택 → 코드 직접 입력으로 넣습니다. 주중용 코드를 주말 예약에 넣어도 막히고, 레저 코드는 숙소에 적용되지 않습니다.",
+  },
+  {
+    id: "faq-yanolja-leisure",
+    platform: "야놀자",
+    question: "야놀자 레저 코드를 숙소에 쓸 수 있나요?",
+    answer:
+      "레저·입장권과 숙소 쿠폰은 분리되어 있습니다. 숙소 결제창에 레저 코드를 넣으면 거절됩니다. 모텔·호텔은 숙소 코드만, 레저는 레저 전용 코드만 됩니다. 결제 수단 할인(카드, 페이)은 코드 적용 이후 단계에서 한 번 더 선택할 수 있으니, 쿠폰이 막혀도 카드·페이 할인은 따로 확인하세요.",
+  },
+  {
+    id: "faq-yanolja-refund",
+    platform: "야놀자",
+    question: "야놀자 예약 취소 시 할인코드가 재발급되나요?",
+    answer:
+      "대부분 1회성이라 무료 취소가 되는 객실이어도 코드가 자동으로 돌아오지 않습니다. 주중/주말 조건이 있는 코드는 취소 후 날짜가 바뀌면 다시 거절될 수 있습니다. 일정 변경이 예상되면 무료 취소 마감 시간을 확인하고, 코드명과 예약번호를 남겨 두세요. 재발급 문의는 야놀자 고객센터에 예약번호와 코드명을 함께 보내야 합니다.",
+  },
+  {
+    id: "faq-yeogi-weekend",
+    platform: "여기어때",
+    question: "여기어때 주말 코드가 평일에 안 될 때는?",
+    answer:
+      "주말 전용 코드는 금·토 체크인에만 되는 경우가 많습니다. 일·월 체크인 예약에 넣으면 거절됩니다. 코드는 결제 단계 쿠폰/포인트 영역에서 등록 후 적용합니다. 이미 큰 특가·무한쿠폰 객실은 추가 코드가 안 될 수 있어, 일반 요금+코드와 특가를 비교하세요. 최소 결제 금액 조건은 코드 적용 전 금액 기준으로 봅니다.",
+  },
+  {
+    id: "faq-yeogi-min",
+    platform: "여기어때",
+    question: "여기어때 최소 결제 금액 때문에 코드가 막힐 때는?",
+    answer:
+      "코드 설명의 최소 금액은 보통 할인 전 숙박 요금 기준입니다. 이미 특가가 적용된 금액이 그 아래로 떨어지면 거절됩니다. 박 수나 객실 수를 늘려 기준을 넘긴 뒤 다시 넣거나, 최소 금액이 없는 다른 코드를 쓰세요. 앱 전용 코드는 웹에서 최소 금액을 채워도 막힐 수 있습니다.",
+  },
+  {
+    id: "faq-yeogi-refund",
+    platform: "여기어때",
+    question: "여기어때 취소 후 쿠폰이 재발급되나요?",
+    answer:
+      "대부분 재발급되지 않습니다. 무료 취소 객실이어도 코드 복구를 보장하지 않는 경우가 많고, 유효기간이 지난 코드는 돌아오지 않습니다. 일정 변경이 예상되면 취소 가능 요금을 고르고, 사용한 코드와 예약번호를 남겨 두세요. 문의는 여기어때 고객센터에 예약번호와 코드명을 함께 보내야 합니다.",
+  },
+  {
+    id: "faq-airbnb-first",
+    platform: "에어비앤비",
+    question: "에어비앤비 첫 예약 코드가 거절될 때는?",
+    answer:
+      "해당 계정으로 숙박을 완료한 이력이 있으면 첫 예약 코드는 거절됩니다. 예약만 했다가 취소한 이력도 신규로 안 보는 경우가 있습니다. 코드는 결제 확인 화면의 쿠폰/프로모션 칸에 넣습니다. 호스트가 할인을 막아 둔 숙소도 있으니, 다른 숙소에서 한 번 더 시도해 보세요. 서비스 수수료·청소비는 할인 대상에서 빠질 수 있습니다.",
+  },
+  {
+    id: "faq-airbnb-longstay",
+    platform: "에어비앤비",
+    question: "에어비앤비 장기 숙박 코드는 몇 박부터인가요?",
+    answer:
+      "코드마다 다르지만 보통 7박 이상입니다. 박 수를 채웠어도 호스트가 주간/월간 할인을 따로 켜 두면 프로모션 코드가 막힐 수 있습니다. 코드 적용 후 숙박 요금만 깎이고 수수료는 그대로인 내역이 정상인 경우가 많습니다. 통화나 결제 수단을 바꾼 뒤 코드가 사라지면 같은 칸에 다시 붙여넣으세요.",
+  },
+  {
+    id: "faq-airbnb-refund",
+    platform: "에어비앤비",
+    question: "에어비앤비 취소 시 프로모션 코드가 재발급되나요?",
+    answer:
+      "대부분 재발급되지 않습니다. 유연한 환불 정책이어도 코드 복구를 보장하지 않는 경우가 많고, 첫 예약 코드는 한 번 쓰면 같은 계정에 다시 안 붙습니다. 일정 변경이 예상되면 환불 정책을 확인하고, 코드명과 예약 코드를 남겨 두세요. 문의는 에어비앤비 고객센터에 예약 코드와 프로모션명을 함께 보내야 합니다.",
+  },
 ];
 
 export function getCouponsByPlatform(slug?: string): Coupon[] {
@@ -545,6 +833,14 @@ export function getCouponsByPlatform(slug?: string): Coupon[] {
   }
 
   return coupons.filter((coupon) => coupon.platform === platform.name);
+}
+
+export function getCouponsByOfferHub(hub: OfferTypeInfo): Coupon[] {
+  return coupons.filter(
+    (coupon) =>
+      coupon.offerType === hub.type &&
+      (coupon.category === hub.category || coupon.category === "공통"),
+  );
 }
 
 /** 플랫폼 페이지에서는 해당 플랫폼 가이드만 반환. 홈(`/`)은 전체. 이후 DB 조회로 교체. */
