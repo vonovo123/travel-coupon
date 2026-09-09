@@ -1,5 +1,5 @@
-import { PageLoadingShell } from "@/components/PageLoadingShell";
-import { ReviewListSkeleton } from "@/components/skeletons/ReviewListSkeleton";
+import { PageLoadingShell } from "@/components/layout/PageLoadingShell";
+import { ReviewListSkeleton } from "@/components/reviews/skeletons/ReviewListSkeleton";
 
 /** 홈(`/`) 로딩·Suspense fallback */
 export function HomeLoading() {

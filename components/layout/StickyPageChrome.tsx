@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { BrandChrome } from "@/components/BrandChrome";
-import { PlatformSidebar } from "@/components/PlatformSidebar";
-import { useReviewFeedProgress } from "@/components/ReviewFeedProgress";
+import { BrandChrome } from "@/components/layout/BrandChrome";
+import { PlatformSidebar } from "@/components/layout/PlatformSidebar";
+import { useReviewFeedProgress } from "@/components/reviews/ReviewFeedProgress";
 import type { PlatformInfo } from "@/types/coupon";
 
 const COMPACT_AFTER_PX = 48;

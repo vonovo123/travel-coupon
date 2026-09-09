@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CouponPage } from "@/components/CouponPage";
+import { SitePage } from "@/components/pages/SitePage";
 import { getPlatformBySlug, platforms } from "@/data/mockData";
 import { platformMetadata } from "@/lib/seo";
 
@@ -35,5 +35,5 @@ export default function PlatformPage({ params }: PlatformRouteProps) {
     notFound();
   }
 
-  return <CouponPage platformSlug={platform.slug} />;
+  return <SitePage platformSlug={platform.slug} />;
 }

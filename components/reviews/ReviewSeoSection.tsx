@@ -1,8 +1,8 @@
-import { SeoAccordionItem, SeoDisclosure } from "@/components/SeoDisclosure";
+import { SeoAccordionItem, SeoDisclosure } from "@/components/seo-ui/SeoDisclosure";
 import {
   reviewSeoFaqs,
   reviewSeoGuides,
-} from "@/data/reviewSeoContent";
+} from "@/data/reviews/reviewSeoContent";
 import type { ReviewPost } from "@/types/coupon";
 
 interface ReviewSeoSectionProps {

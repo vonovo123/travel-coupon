@@ -1,5 +1,5 @@
-import { PageLoadingShell } from "@/components/PageLoadingShell";
-import { CouponListSkeleton } from "@/components/skeletons/CouponListSkeleton";
+import { PageLoadingShell } from "@/components/layout/PageLoadingShell";
+import { CouponListSkeleton } from "@/components/coupons/skeletons/CouponListSkeleton";
 
 interface PlatformLoadingProps {
   platformSlug?: string;

@@ -591,7 +591,7 @@ export function getFaqsByPlatform(slug?: string): FaqItem[] {
 
 /**
  * 코드세이아 네이버 블로그 여행후기 더미.
- * 홈은 RSS(`lib/naverBlogRss.ts`)를 우선 사용하고, 실패 시에만 이 목록으로 폴백.
+ * 홈은 RSS(`lib/reviews/naverBlogRss.ts`)를 우선 사용하고, 실패 시에만 이 목록으로 폴백.
  */
 export const reviews: ReviewPost[] = [
   {

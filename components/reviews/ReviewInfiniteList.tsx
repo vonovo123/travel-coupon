@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ReviewCard } from "@/components/ReviewCard";
-import { useReviewFeedProgress } from "@/components/ReviewFeedProgress";
-import { ReviewCardSkeleton } from "@/components/skeletons/ReviewCardSkeleton";
+import { ReviewCard } from "@/components/reviews/ReviewCard";
+import { useReviewFeedProgress } from "@/components/reviews/ReviewFeedProgress";
+import { ReviewCardSkeleton } from "@/components/reviews/skeletons/ReviewCardSkeleton";
 import type { ReviewPost } from "@/types/coupon";
 
 const PAGE_SIZE = 10;

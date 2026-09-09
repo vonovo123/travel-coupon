@@ -1,4 +1,4 @@
-import { ReviewCardSkeleton } from "@/components/skeletons/ReviewCardSkeleton";
+import { ReviewCardSkeleton } from "@/components/reviews/skeletons/ReviewCardSkeleton";
 
 interface ReviewListSkeletonProps {
   count?: number;

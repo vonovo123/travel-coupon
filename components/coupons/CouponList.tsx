@@ -1,4 +1,4 @@
-import { CouponCard } from "@/components/CouponCard";
+import { CouponCard } from "@/components/coupons/CouponCard";
 import type { Coupon } from "@/types/coupon";
 
 interface CouponListProps {

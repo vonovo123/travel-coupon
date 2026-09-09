@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
-import { extractKeywordsFromTitle } from "@/lib/reviewKeywords";
+import { extractKeywordsFromTitle } from "@/lib/reviews/reviewKeywords";
 import type { ReviewPost } from "@/types/coupon";
 
 interface ReviewCardProps {

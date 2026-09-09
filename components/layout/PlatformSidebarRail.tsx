@@ -1,4 +1,4 @@
-import { PlatformSidebar } from "@/components/PlatformSidebar";
+import { PlatformSidebar } from "@/components/layout/PlatformSidebar";
 
 interface PlatformSidebarRailProps {
   currentSlug?: string;

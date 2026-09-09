@@ -25,7 +25,7 @@ npm run build && npm start
 - 디자인 토큰: `deep-navy` / `starlight-gold` / `light-sand` / `parchment`
 
 **홈 = 여행 후기**
-- 네이버 블로그 RSS (`lib/naverBlogRss.ts`, 기본 ID `dlthdus12345`)
+- 네이버 블로그 RSS (`lib/reviews/naverBlogRss.ts`, 기본 ID `dlthdus12345`)
 - 무한 스크롤(10개씩, 약간의 로딩 지연 + 스켈레톤)
 - 카드에 제목 기반 키워드 칩
 - 하단 SEO는 접힌 `<details>` (제목 모음·가이드·FAQ) — 숨김 클로킹 아님
@@ -117,28 +117,23 @@ npm start
 
 ---
 
-## 주요 구조
+## 주요 구조 (기능별)
 
 ```
-app/
-  page.tsx                 홈(후기) + Suspense
-  loading.tsx              홈 스켈레톤
-  [platform]/page.tsx      플랫폼 페이지
-  [platform]/loading.tsx
-  sitemap.ts / robots.ts
+app/                         라우트 (홈·플랫폼·sitemap/robots)
 components/
-  BrandChrome.tsx          통합 헤더/히어로
-  StickyPageChrome.tsx     fixed 크롬 + 모바일 메뉴
-  ReviewInfiniteList.tsx
-  CouponPage.tsx
-  PlatformSidebar*.tsx
-  skeletons/
-data/mockData.ts           쿠폰·가이드·FAQ·플랫폼
-data/reviewSeoContent.ts   홈 후기 SEO
-lib/naverBlogRss.ts
-lib/homeReviews.ts
-lib/reviewKeywords.ts
-lib/seo.ts
+  layout/                    헤더/크롬·사이드바·로딩 셸
+  reviews/                   후기 카드·무한스크롤·후기 SEO
+  coupons/                   할인코드 카드·목록
+  seo-ui/                     JsonLd·공통 아코디언 SEO
+  pages/SitePage.tsx         홈/플랫폼 페이지 조립
+data/
+  mockData.ts                플랫폼·쿠폰·가이드·FAQ
+  reviews/reviewSeoContent.ts
+lib/
+  seo.ts
+  reviews/                   RSS·키워드·홈 후기 fetch
+types/coupon.ts
 ```
 
 ---

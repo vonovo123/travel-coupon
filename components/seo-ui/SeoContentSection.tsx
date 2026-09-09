@@ -1,4 +1,4 @@
-import { SeoAccordionItem, SeoDisclosure } from "@/components/SeoDisclosure";
+import { SeoAccordionItem, SeoDisclosure } from "@/components/seo-ui/SeoDisclosure";
 import type { FaqItem, GuideItem, PaymentTip, Platform } from "@/types/coupon";
 
 interface SeoContentSectionProps {

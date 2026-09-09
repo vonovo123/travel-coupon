@@ -1,12 +1,12 @@
-import { CouponList } from "@/components/CouponList";
-import { PlatformSidebarRail } from "@/components/PlatformSidebarRail";
-import { ReviewFeedProgressProvider } from "@/components/ReviewFeedProgress";
-import { StickyPageChrome } from "@/components/StickyPageChrome";
-import { ReviewInfiniteList } from "@/components/ReviewInfiniteList";
-import { ReviewSeoSection } from "@/components/ReviewSeoSection";
-import { JsonLd } from "@/components/SEO/JsonLd";
-import { SeoContentSection } from "@/components/SeoContentSection";
-import { reviewSeoFaqs } from "@/data/reviewSeoContent";
+import { CouponList } from "@/components/coupons/CouponList";
+import { PlatformSidebarRail } from "@/components/layout/PlatformSidebarRail";
+import { ReviewFeedProgressProvider } from "@/components/reviews/ReviewFeedProgress";
+import { StickyPageChrome } from "@/components/layout/StickyPageChrome";
+import { ReviewInfiniteList } from "@/components/reviews/ReviewInfiniteList";
+import { ReviewSeoSection } from "@/components/reviews/ReviewSeoSection";
+import { JsonLd } from "@/components/seo-ui/JsonLd";
+import { SeoContentSection } from "@/components/seo-ui/SeoContentSection";
+import { reviewSeoFaqs } from "@/data/reviews/reviewSeoContent";
 import {
   getCouponsByPlatform,
   getFaqsByPlatform,
@@ -17,16 +17,16 @@ import {
 } from "@/data/mockData";
 import type { ReviewPost } from "@/types/coupon";
 
-interface CouponPageProps {
+interface SitePageProps {
   platformSlug?: string;
   /** 홈에서 RSS로 가져온 항해일지. 없으면 더미로 폴백. */
   reviews?: ReviewPost[];
 }
 
-export function CouponPage({
+export function SitePage({
   platformSlug,
   reviews: reviewsProp,
-}: CouponPageProps) {
+}: SitePageProps) {
   const platform = platformSlug ? getPlatformBySlug(platformSlug) : undefined;
   const isHome = !platform;
   const coupons = getCouponsByPlatform(platformSlug);

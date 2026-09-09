@@ -1,5 +1,5 @@
-import { PlatformSidebarRail } from "@/components/PlatformSidebarRail";
-import { StickyPageChrome } from "@/components/StickyPageChrome";
+import { PlatformSidebarRail } from "@/components/layout/PlatformSidebarRail";
+import { StickyPageChrome } from "@/components/layout/StickyPageChrome";
 import type { ReactNode } from "react";
 
 interface PageLoadingShellProps {

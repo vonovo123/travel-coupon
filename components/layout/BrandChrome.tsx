@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Compass, Map as MapIcon, ScrollText, X } from "lucide-react";
-import { HeroShipDecoration } from "@/components/HeroShipDecoration";
+import { HeroShipDecoration } from "@/components/layout/HeroShipDecoration";
 import { getFreshness } from "@/lib/seo";
 import type { PlatformInfo } from "@/types/coupon";
 
