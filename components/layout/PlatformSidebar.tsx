@@ -11,12 +11,12 @@ import {
   Star,
   Ticket,
 } from "lucide-react";
-import { listedPlatforms } from "@/data/mockData";
 import { offerTypeHubs } from "@/data/offerTypes";
-import type { OfferType } from "@/types/coupon";
+import type { OfferType, PlatformInfo } from "@/types/coupon";
 
 interface PlatformSidebarProps {
   currentSlug?: string;
+  listedPlatforms: PlatformInfo[];
   /** 모바일 드롭다운에서 항로 선택 시 메뉴 닫기 */
   onNavigate?: () => void;
   /** 모바일 드롭다운용 촘촘한 카드 (내부 스크롤 없이 한 화면에) */
@@ -46,6 +46,7 @@ const offerTypeIcons: Record<OfferType, typeof BedDouble> = {
 
 export function PlatformSidebar({
   currentSlug,
+  listedPlatforms,
   onNavigate,
   dense = false,
 }: PlatformSidebarProps) {

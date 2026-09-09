@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import { listedPlatforms } from "@/data/mockData";
 import { SimplePageFrame } from "@/components/layout/SimplePageFrame";
+import { getListedPlatforms } from "@/lib/content/catalog";
 import { buildPrivacyMetadata, siteName } from "@/lib/seo";
 
 export const metadata: Metadata = buildPrivacyMetadata();
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const listedPlatforms = await getListedPlatforms();
+
   return (
-    <SimplePageFrame>
+    <SimplePageFrame listedPlatforms={listedPlatforms}>
       <article className="max-w-2xl space-y-8 text-sm leading-relaxed text-deep-navy/75">
         <header>
           <h1 className="font-serif text-2xl font-semibold text-deep-navy sm:text-3xl">

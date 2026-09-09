@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { listedPlatforms } from "@/data/mockData";
 import { SimplePageFrame } from "@/components/layout/SimplePageFrame";
 
 interface ErrorPageProps {
@@ -33,15 +32,6 @@ export default function Error({ reset }: ErrorPageProps) {
           >
             여행 후기
           </Link>
-          {listedPlatforms.slice(0, 3).map((platform) => (
-            <Link
-              key={platform.slug}
-              href={`/${platform.slug}`}
-              className="border border-deep-navy/15 bg-parchment px-4 py-2 text-sm text-deep-navy hover:border-starlight-gold"
-            >
-              {platform.name}
-            </Link>
-          ))}
         </div>
       </main>
     </SimplePageFrame>

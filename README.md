@@ -35,7 +35,7 @@ npm run build && npm start
 - `/hotelscom` `/tripcom` `/myrealtrip` `/agoda` `/klook` `/nol`
 - `/expedia` `/booking` `/yanolja` `/yeogi` `/airbnb` (가이드·결제팁·FAQ mock 포함, `listed: true`)
 - 쿠폰 가로바(복사 / GO), 플랫폼별 가이드·결제팁·FAQ
-- 데이터: `data/mockData.ts` (이후 DB 교체 예정)
+- 플랫폼·할인코드: Sanity (`lib/content/catalog.ts`). 가이드·FAQ는 당분간 `data/mockData.ts`
 
 **성능 / UX**
 - RSS `cache()`로 메타+페이지 요청 중복 완화
@@ -54,7 +54,7 @@ npm run build && npm start
 1. ~~Vercel 배포 + `NEXT_PUBLIC_SITE_URL`~~ → https://travel-coupon.vercel.app
 2. 아래 **다음 기능 (SEO·UX)** 2순위부터 구현
 3. 실제 제휴 링크·쿠폰 코드·유효기간 교체
-4. DB 연동 (`getCouponsByPlatform` 등 getter만 교체)
+4. ~~플랫폼·할인코드 Sanity 연동~~ → 가이드/FAQ Sanity화는 이후
 5. Search Console / 네이버 서치어드바이저 등록
 
 ---
@@ -104,8 +104,8 @@ npm run build && npm start
 | `/[platform]` | 플랫폼별 할인코드 + 가이드/FAQ |
 | `/privacy` | 개인정보 처리방침·제휴 고지 |
 
-`app/[platform]/page.tsx`: `generateStaticParams` + `dynamicParams = false`  
-홈 `revalidate = 3600`(RSS), 플랫폼 `revalidate = 86400`.
+`app/[platform]/page.tsx`: `generateStaticParams` + `dynamicParams = true`(Studio에 새 플랫폼을 넣으면 재빌드 없이 URL 생성).  
+홈·플랫폼 `revalidate = 3600`. 로컬 개발은 Sanity fetch 캐시를 끈다.
 
 ---
 
@@ -117,9 +117,10 @@ npm run build && npm start
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | canonical/OG 기준 URL (배포 시 **필수**, 예: `https://xxx.vercel.app`) |
 | `NAVER_BLOG_ID` | 네이버 블로그 ID (기본 `dlthdus12345`) |
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Sanity 프로젝트 ID ([manage](https://www.sanity.io/manage)) |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Sanity 프로젝트 ID ([manage](https://www.sanity.io/manage)). **배포 시 필수** |
 | `NEXT_PUBLIC_SANITY_DATASET` | 데이터셋 (기본 `production`) |
 | `NEXT_PUBLIC_SANITY_API_VERSION` | GROQ API 날짜 (예: `2026-09-09`) |
+| `SANITY_STUDIO_PROJECT_ID` 등 | Studio(`npm run sanity:dev`)용. Vite는 `SANITY_STUDIO_`만 주입 |
 
 ### Sanity 연결
 
@@ -128,7 +129,8 @@ npm run build && npm start
 3. `npx sanity login` 후 `npm run sanity:dev` → 로컬 Studio (`http://localhost:3333`)
 4. Studio만 클라우드에 올릴 때 `npm run sanity:deploy`
 
-스키마는 `sanity/schemaTypes` (지금은 비어 있음). 사이트 페이지는 아직 mock을 읽고, `sanity/lib/client.ts`는 다음 단계에서 getter에 연결한다.
+플랫폼·할인코드 페이지는 Sanity를 읽는다(1시간 캐시). 가이드·FAQ는 당분간 mock.  
+배포 시 Vercel에도 `NEXT_PUBLIC_SANITY_PROJECT_ID` / `DATASET`을 넣는다.
 
 ---
 
@@ -147,6 +149,7 @@ Next.js 기본 설정으로 배포 가능 (`vercel.json`에 framework 지정).
 3. Framework Preset: **Next.js** (자동 감지)
 4. Environment Variables:
    - `NEXT_PUBLIC_SITE_URL` = `https://<프로젝트>.vercel.app` (커스텀 도메인 쓰면 그 URL)
+   - `NEXT_PUBLIC_SANITY_PROJECT_ID` / `NEXT_PUBLIC_SANITY_DATASET`
    - (선택) `NAVER_BLOG_ID`
 5. Deploy
 
@@ -183,17 +186,21 @@ components/
   seo-ui/                     JsonLd·공통 아코디언 SEO
   pages/SitePage.tsx         홈/플랫폼 페이지 조립
 data/
-  mockData.ts                플랫폼·쿠폰·가이드·FAQ (`listed`로 공개 여부)
+  mockData.ts                시드 원본 + 가이드·FAQ·후기 폴백
+  offerTypes.ts              상품 허브 정의
   reviews/reviewSeoContent.ts
 lib/
+  content/catalog.ts         Sanity 플랫폼·쿠폰 조회
   seo.ts
   og/                        OG 이미지 렌더 + Pretendard 폰트
   reviews/                   RSS·키워드·홈 후기 fetch
 types/coupon.ts
 sanity/
   env.ts                     프로젝트 ID·dataset
-  lib/client.ts              GROQ 클라이언트 (아직 페이지 미연결)
-  schemaTypes/               Studio 스키마 (비어 있음)
+  lib/client.ts              GROQ 클라이언트
+  lib/queries.ts             플랫폼·쿠폰 쿼리
+  schemaTypes/               platform·coupon
+scripts/seedSanity.ts        mock → Sanity 시드
 sanity.config.ts
 sanity.cli.ts
 ```

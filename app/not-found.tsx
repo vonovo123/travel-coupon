@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { listedPlatforms } from "@/data/mockData";
 import { SimplePageFrame } from "@/components/layout/SimplePageFrame";
+import { getListedPlatforms } from "@/lib/content/catalog";
 
 export const metadata = {
   title: "페이지를 찾을 수 없습니다",
@@ -10,9 +10,11 @@ export const metadata = {
   },
 };
 
-export default function NotFound() {
+export default async function NotFound() {
+  const listedPlatforms = await getListedPlatforms();
+
   return (
-    <SimplePageFrame>
+    <SimplePageFrame listedPlatforms={listedPlatforms}>
       <main>
         <p className="text-sm text-starlight-gold">404</p>
         <h1 className="mt-2 font-serif text-2xl font-semibold text-deep-navy sm:text-3xl">

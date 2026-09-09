@@ -13,12 +13,14 @@ interface StickyPageChromeProps {
   currentSlug?: string;
   platform?: PlatformInfo;
   offerHub?: OfferTypeInfo;
+  listedPlatforms: PlatformInfo[];
 }
 
 export function StickyPageChrome({
   currentSlug,
   platform,
   offerHub,
+  listedPlatforms,
 }: StickyPageChromeProps) {
   const [compact, setCompact] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -125,6 +127,7 @@ export function StickyPageChrome({
               </p>
               <PlatformSidebar
                 currentSlug={currentSlug}
+                listedPlatforms={listedPlatforms}
                 onNavigate={closeMenu}
                 dense
               />

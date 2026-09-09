@@ -1,5 +1,5 @@
-import { getPlatformBySlug } from "@/data/mockData";
 import { getOfferTypeBySlug } from "@/data/offerTypes";
+import { getPlatformBySlug } from "@/lib/content/catalog";
 import { getFreshness } from "@/lib/seo";
 import { ogContentType, ogSize, renderOgImage } from "@/lib/og/renderOgImage";
 
@@ -13,9 +13,11 @@ interface PlatformOgProps {
   };
 }
 
-export function generateImageMetadata({ params }: PlatformOgProps) {
+export async function generateImageMetadata({ params }: PlatformOgProps) {
   const offerHub = getOfferTypeBySlug(params.platform);
-  const platform = getPlatformBySlug(params.platform);
+  const platform = offerHub
+    ? undefined
+    : await getPlatformBySlug(params.platform);
   const alt = offerHub
     ? `${offerHub.label} | 코드세이아`
     : `${platform?.name ?? "플랫폼"} 할인코드 | 코드세이아`;
@@ -32,7 +34,6 @@ export function generateImageMetadata({ params }: PlatformOgProps) {
 
 export default async function Image({ params }: PlatformOgProps) {
   const offerHub = getOfferTypeBySlug(params.platform);
-  const platform = getPlatformBySlug(params.platform);
   const { year, month } = getFreshness();
 
   if (offerHub) {
@@ -43,6 +44,7 @@ export default async function Image({ params }: PlatformOgProps) {
     });
   }
 
+  const platform = await getPlatformBySlug(params.platform);
   const name = platform?.name ?? "여행 플랫폼";
 
   return renderOgImage({

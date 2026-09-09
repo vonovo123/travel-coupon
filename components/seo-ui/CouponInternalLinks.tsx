@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { listedPlatforms } from "@/data/mockData";
 import { offerTypeHubs } from "@/data/offerTypes";
 import type { Coupon, OfferTypeInfo, PlatformInfo } from "@/types/coupon";
 
 interface CouponInternalLinksProps {
   variant: "home" | "hub" | "platform";
+  listedPlatforms: PlatformInfo[];
   offerHub?: OfferTypeInfo;
   platform?: PlatformInfo;
   coupons?: Coupon[];
@@ -44,6 +44,7 @@ function LinkGroup({
 
 export function CouponInternalLinks({
   variant,
+  listedPlatforms,
   offerHub,
   platform,
   coupons = [],

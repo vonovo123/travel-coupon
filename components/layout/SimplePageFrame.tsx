@@ -3,12 +3,17 @@
 import Link from "next/link";
 import { Compass } from "lucide-react";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import type { PlatformInfo } from "@/types/coupon";
 
 interface SimplePageFrameProps {
   children: React.ReactNode;
+  listedPlatforms?: PlatformInfo[];
 }
 
-export function SimplePageFrame({ children }: SimplePageFrameProps) {
+export function SimplePageFrame({
+  children,
+  listedPlatforms = [],
+}: SimplePageFrameProps) {
   return (
     <div className="min-h-screen bg-light-sand text-deep-navy">
       <header className="bg-gradient-to-b from-deep-navy to-deep-navy-muted">
@@ -27,7 +32,7 @@ export function SimplePageFrame({ children }: SimplePageFrameProps) {
       </header>
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         {children}
-        <SiteFooter />
+        <SiteFooter listedPlatforms={listedPlatforms} />
       </div>
     </div>
   );

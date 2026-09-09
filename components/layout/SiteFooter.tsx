@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { listedPlatforms } from "@/data/mockData";
 import { offerTypeHubs, offerTypeNames } from "@/data/offerTypes";
-import type { OfferType } from "@/types/coupon";
+import type { OfferType, PlatformInfo } from "@/types/coupon";
 
 interface SiteFooterProps {
   usageHint?: string;
+  listedPlatforms?: PlatformInfo[];
 }
 
 const offerTypeOrder: OfferType[] = ["stay", "tour", "flight", "package"];
@@ -12,7 +12,10 @@ const offerTypeOrder: OfferType[] = ["stay", "tour", "flight", "package"];
 const footerLinkClass =
   "text-deep-navy/70 transition hover:text-starlight-gold";
 
-export function SiteFooter({ usageHint }: SiteFooterProps) {
+export function SiteFooter({
+  usageHint,
+  listedPlatforms = [],
+}: SiteFooterProps) {
   return (
     <footer className="border-t border-deep-navy/10 pt-8 pb-10 text-sm">
       {usageHint ? (

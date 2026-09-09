@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
-import { platforms } from "@/data/mockData";
 import { offerTypeNames } from "@/data/offerTypes";
 import type { Coupon } from "@/types/coupon";
 
@@ -30,7 +29,6 @@ async function copyText(value: string) {
 export function CouponCard({ coupon }: CouponCardProps) {
   const [copied, setCopied] = useState(false);
   const [revealed, setRevealed] = useState(false);
-  const style = platforms.find((item) => item.name === coupon.platform);
 
   function markCopied() {
     setRevealed(true);
@@ -65,7 +63,7 @@ export function CouponCard({ coupon }: CouponCardProps) {
           className="flex h-12 w-12 shrink-0 items-center justify-center bg-deep-navy text-base font-bold text-starlight-gold"
           aria-hidden
         >
-          {style?.initial ?? coupon.platform.slice(0, 1)}
+          {coupon.initial}
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">

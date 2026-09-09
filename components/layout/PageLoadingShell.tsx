@@ -1,11 +1,13 @@
 import { PlatformSidebarRail } from "@/components/layout/PlatformSidebarRail";
 import { StickyPageChrome } from "@/components/layout/StickyPageChrome";
+import type { PlatformInfo } from "@/types/coupon";
 import type { ReactNode } from "react";
 
 interface PageLoadingShellProps {
   children: ReactNode;
   footerHint?: string;
   currentSlug?: string;
+  listedPlatforms?: PlatformInfo[];
 }
 
 /** URL 이동·데이터 대기 시 공통 레이아웃 (헤더 + 사이드바 유지) */
@@ -13,10 +15,14 @@ export function PageLoadingShell({
   children,
   footerHint = "불러오는 중…",
   currentSlug,
+  listedPlatforms = [],
 }: PageLoadingShellProps) {
   return (
     <div className="min-h-screen bg-light-sand text-deep-navy">
-      <StickyPageChrome currentSlug={currentSlug} />
+      <StickyPageChrome
+        currentSlug={currentSlug}
+        listedPlatforms={listedPlatforms}
+      />
       <div className="mx-auto grid max-w-6xl gap-4 px-4 py-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
         <div className="min-w-0">
           <main>{children}</main>
@@ -25,7 +31,10 @@ export function PageLoadingShell({
             {footerHint}
           </footer>
         </div>
-        <PlatformSidebarRail currentSlug={currentSlug} />
+        <PlatformSidebarRail
+          currentSlug={currentSlug}
+          listedPlatforms={listedPlatforms}
+        />
       </div>
     </div>
   );

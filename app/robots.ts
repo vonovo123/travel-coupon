@@ -1,8 +1,10 @@
 import type { MetadataRoute } from "next";
-import { unlistedPlatforms } from "@/data/mockData";
+import { getUnlistedPlatforms } from "@/lib/content/catalog";
 import { siteUrl } from "@/lib/seo";
 
-export default function robots(): MetadataRoute.Robots {
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const unlistedPlatforms = await getUnlistedPlatforms();
+
   return {
     rules: {
       userAgent: "*",

@@ -147,6 +147,7 @@ function couponDefaults(platformName: Platform) {
     platform: platform.name,
     logoUrl: platform.color,
     affiliateLink: platform.affiliateLink,
+    initial: platform.initial,
   };
 }
 
@@ -858,31 +859,27 @@ export function getGuidesByPlatform(slug?: string): GuideItem[] {
   return platformGuides.filter((guide) => guide.platform === platform.name);
 }
 
-function filterPageScoped<T extends { platform?: Platform }>(
+function filterPageScopedByName<T extends { platform?: Platform }>(
   items: T[],
-  slug?: string,
+  platformName?: string,
 ): T[] {
-  if (!slug) {
+  if (!platformName) {
     return items.filter((item) => !item.platform);
   }
 
-  const platform = getPlatformBySlug(slug);
-
-  if (!platform) {
-    return [];
-  }
-
-  return items.filter((item) => item.platform === platform.name);
+  return items.filter((item) => item.platform === platformName);
 }
 
-/** 홈은 공통만, 플랫폼 페이지는 해당 플랫폼 글만. 이후 DB 조회로 교체. */
-export function getPaymentTipsByPlatform(slug?: string): PaymentTip[] {
-  return filterPageScoped(paymentTips, slug);
+export function getGuidesByPlatformName(platformName: string): GuideItem[] {
+  return platformGuides.filter((guide) => guide.platform === platformName);
 }
 
-/** 홈은 공통만, 플랫폼 페이지는 해당 플랫폼 FAQ만. 이후 DB 조회로 교체. */
-export function getFaqsByPlatform(slug?: string): FaqItem[] {
-  return filterPageScoped(faqs, slug);
+export function getPaymentTipsByPlatformName(platformName: string): PaymentTip[] {
+  return filterPageScopedByName(paymentTips, platformName);
+}
+
+export function getFaqsByPlatformName(platformName: string): FaqItem[] {
+  return filterPageScopedByName(faqs, platformName);
 }
 
 /**

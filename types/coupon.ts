@@ -1,15 +1,4 @@
-export type Platform =
-  | "호텔스닷컴"
-  | "트립닷컴"
-  | "마이리얼트립"
-  | "아고다"
-  | "클룩"
-  | "Nol"
-  | "익스피디아"
-  | "부킹닷컴"
-  | "야놀자"
-  | "여기어때"
-  | "에어비앤비";
+export type Platform = string;
 
 export type Category = "국내" | "해외" | "공통";
 
@@ -43,6 +32,7 @@ export interface PlatformInfo {
 export interface Coupon {
   id: string;
   platform: Platform;
+  initial: string;
   logoUrl: string;
   offerType: OfferType;
   category: Category;

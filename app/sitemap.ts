@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
-import { listedPlatforms } from "@/data/mockData";
 import { offerTypeHubs } from "@/data/offerTypes";
+import { getListedPlatforms } from "@/lib/content/catalog";
 import { siteUrl } from "@/lib/seo";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date();
+  const listedPlatforms = await getListedPlatforms();
 
   return [
     {
