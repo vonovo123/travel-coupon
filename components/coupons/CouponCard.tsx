@@ -9,21 +9,33 @@ interface CouponCardProps {
   coupon: Coupon;
 }
 
-async function copyText(value: string) {
-  if (navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(value);
-    return;
+const clipboardPermissionMessage =
+  "할인코드가 복사되지 않았습니다. 브라우저에서 클립보드(복사) 권한을 허용한 뒤 다시 눌러 주세요. 확인을 누르면 적용 페이지로 이동합니다.";
+
+async function copyText(value: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(value);
+      return true;
+    }
+  } catch {
+    // execCommand로 한 번 더 시도한다.
   }
 
-  const textarea = document.createElement("textarea");
-  textarea.value = value;
-  textarea.setAttribute("readonly", "");
-  textarea.style.position = "fixed";
-  textarea.style.left = "-9999px";
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand("copy");
-  document.body.removeChild(textarea);
+  try {
+    const textarea = document.createElement("textarea");
+    textarea.value = value;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+    document.body.appendChild(textarea);
+    textarea.select();
+    const copied = document.execCommand("copy");
+    document.body.removeChild(textarea);
+    return copied;
+  } catch {
+    return false;
+  }
 }
 
 export function CouponCard({ coupon }: CouponCardProps) {
@@ -37,23 +49,24 @@ export function CouponCard({ coupon }: CouponCardProps) {
   }
 
   async function handleCopy() {
-    try {
-      await copyText(coupon.code);
+    const copiedOk = await copyText(coupon.code);
+    setRevealed(true);
+    if (copiedOk) {
       markCopied();
-    } catch {
-      setRevealed(true);
     }
   }
 
   async function handleCopyAndGo() {
-    window.open(coupon.affiliateLink, "_blank", "noopener,noreferrer");
+    const copiedOk = await copyText(coupon.code);
+    setRevealed(true);
 
-    try {
-      await copyText(coupon.code);
+    if (copiedOk) {
       markCopied();
-    } catch {
-      setRevealed(true);
+    } else {
+      window.alert(clipboardPermissionMessage);
     }
+
+    window.open(coupon.affiliateLink, "_blank", "noopener,noreferrer");
   }
 
   return (
