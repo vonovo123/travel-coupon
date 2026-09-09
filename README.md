@@ -15,6 +15,10 @@ npm run build && npm start
 
 ## 2026-09-09 진행 상태
 
+라이브: https://travel-coupon.vercel.app  
+Studio: https://codeyssey.sanity.studio/  
+Sanity 프로젝트 ID: `4gajz7je` / dataset `production`
+
 ### 완료
 
 **브랜딩 / 레이아웃**
@@ -23,6 +27,7 @@ npm run build && npm start
 - 모바일: 히어로 카피/배 이미지 없음, 상단 **메뉴**로 플랫폼 목록 드롭다운
 - 데스크톱 사이드바는 sticky 없음(본문과 함께 스크롤)
 - 디자인 토큰: `deep-navy` / `starlight-gold` / `light-sand` / `parchment`
+- 파비콘·Apple 아이콘: 헤더와 같은 나침반 (`app/icon.tsx`, `app/apple-icon.tsx`)
 
 **홈 = 여행 후기**
 - 네이버 블로그 RSS (`lib/reviews/naverBlogRss.ts`, 기본 ID `dlthdus12345`)
@@ -34,8 +39,16 @@ npm run build && npm start
 **플랫폼 할인코드**
 - `/hotelscom` `/tripcom` `/myrealtrip` `/agoda` `/klook` `/nol`
 - `/expedia` `/booking` `/yanolja` `/yeogi` `/airbnb` (가이드·결제팁·FAQ mock 포함, `listed: true`)
-- 쿠폰 가로바(복사 / GO), 플랫폼별 가이드·결제팁·FAQ
-- 플랫폼·할인코드: Sanity (`lib/content/catalog.ts`). 가이드·FAQ는 당분간 `data/mockData.ts`
+- 쿠폰 가로바(복사 / 복사 & 적용), 플랫폼별 가이드·결제팁·FAQ
+- 플랫폼·할인코드는 Sanity (`lib/content/catalog.ts`). 가이드·FAQ·후기 폴백은 `data/mockData.ts`
+- `코드 복사 & 적용하기`: 이 페이지에서 먼저 복사. 실패하면 클립보드 권한 안내 얼럿 후 적용 페이지로 이동
+
+**Sanity / 배포**
+- Studio 스키마: `platform`, `coupon`. 시드 `npm run sanity:seed` (재실행 시 Studio에서 고친 코드가 mock으로 덮임)
+- 사이트는 공개된 문서를 CDN으로 읽음(토큰 없음). 배포 환경 1시간 ISR, 로컬은 fetch 캐시 끔
+- Vercel env: `NEXT_PUBLIC_SANITY_PROJECT_ID` / `DATASET` / `API_VERSION` (Production·Preview·Development)
+- 사이트는 서버에서 Sanity를 읽으므로 CORS에 Vercel URL이 없어도 됨. CORS origin은 로컬 Studio `http://localhost:3333`
+- 클라우드 Studio 호스트: `codeyssey` (`sanity.cli.ts`)
 
 **성능 / UX**
 - RSS `cache()`로 메타+페이지 요청 중복 완화
@@ -51,11 +64,12 @@ npm run build && npm start
 
 ### 다음에 할 일
 
-1. ~~Vercel 배포 + `NEXT_PUBLIC_SITE_URL`~~ → https://travel-coupon.vercel.app
-2. 아래 **다음 기능 (SEO·UX)** 2순위부터 구현
-3. 실제 제휴 링크·쿠폰 코드·유효기간 교체
-4. ~~플랫폼·할인코드 Sanity 연동~~ → 가이드/FAQ Sanity화는 이후
+1. ~~Vercel 배포 + Sanity 연동~~ → https://travel-coupon.vercel.app
+2. Studio에서 실제 제휴 링크·쿠폰 코드·유효기간 교체 (`sanity:seed` 재실행 금지)
+3. 가이드/FAQ Sanity화
+4. 자체 도메인(브랜드명 권장) + `NEXT_PUBLIC_SITE_URL` 갱신 + `vercel.app` 301
 5. Search Console / 네이버 서치어드바이저 등록
+6. 아래 **다음 기능 (SEO·UX)** 2순위부터 구현
 
 ---
 
@@ -121,16 +135,33 @@ npm run build && npm start
 | `NEXT_PUBLIC_SANITY_DATASET` | 데이터셋 (기본 `production`) |
 | `NEXT_PUBLIC_SANITY_API_VERSION` | GROQ API 날짜 (예: `2026-09-09`) |
 | `SANITY_STUDIO_PROJECT_ID` 등 | Studio(`npm run sanity:dev`)용. Vite는 `SANITY_STUDIO_`만 주입 |
+| `SANITY_STUDIO_HOST` | Studio 배포 호스트 (기본 `codeyssey` → https://codeyssey.sanity.studio/) |
 
 ### Sanity 연결
 
-1. [sanity.io/manage](https://www.sanity.io/manage)에서 프로젝트 생성
-2. `.env.example`을 `.env.local`로 복사한 뒤 `NEXT_PUBLIC_SANITY_PROJECT_ID` 입력
-3. `npx sanity login` 후 `npm run sanity:dev` → 로컬 Studio (`http://localhost:3333`)
-4. Studio만 클라우드에 올릴 때 `npm run sanity:deploy`
+이미 프로젝트·시드·Studio 배포가 되어 있다. 새로 만들지 말고 같은 프로젝트(`4gajz7je`)를 쓴다.
 
-플랫폼·할인코드 페이지는 Sanity를 읽는다(1시간 캐시). 가이드·FAQ는 당분간 mock.  
-배포 시 Vercel에도 `NEXT_PUBLIC_SANITY_PROJECT_ID` / `DATASET`을 넣는다.
+| 구분 | 주소 / 명령 |
+|---|---|
+| 클라우드 Studio (브라우저에서 수정) | https://codeyssey.sanity.studio/ |
+| 로컬 Studio | `npx sanity login` 후 `npm run sanity:dev` → http://localhost:3333 |
+| 사이트 읽기 | `lib/content/catalog.ts` GROQ. 공개 dataset, 읽기 토큰 없음 |
+| Studio 재배포 | `npm run sanity:deploy` (호스트 `codeyssey`) |
+
+`npm run sanity:seed`는 초기 적재용. 다시 돌리면 Studio에서 고친 코드가 mock으로 덮인다.
+
+### 다른 컴퓨터에서 클론
+
+`.env.local`은 gitignore라 클론에 없다.
+
+```bash
+npm install
+cp .env.example .env.local
+```
+
+`.env.local`에 `NEXT_PUBLIC_SANITY_PROJECT_ID`와 `SANITY_STUDIO_PROJECT_ID`를 `4gajz7je`로 넣는다. 나머지는 예시 기본값으로 된다. `npm run dev`만으로 사이트는 Sanity를 읽는다(로그인 불필요).
+
+콘텐츠 수정은 Studio URL에서 같은 Sanity 계정으로 로그인하면 된다. 다른 계정이면 [manage](https://www.sanity.io/manage)에서 멤버 초대. `SANITY_API_READ_TOKEN`·Vercel CLI는 로컬 실행에 필요 없다.
 
 ---
 
@@ -139,6 +170,8 @@ npm run build && npm start
 라이브: https://travel-coupon.vercel.app  
 대시보드: https://vercel.com/921014/travel-coupon  
 GitHub `main` 푸시 시 자동 배포.
+
+Vercel에는 `NEXT_PUBLIC_SITE_URL`과 Sanity `NEXT_PUBLIC_*` 세 값이 들어가 있다. 커스텀 도메인을 붙이면 `NEXT_PUBLIC_SITE_URL`을 새 주소로 바꾸고 재배포한다.
 
 Next.js 기본 설정으로 배포 가능 (`vercel.json`에 framework 지정).
 
@@ -179,6 +212,7 @@ npm start
 
 ```
 app/                         라우트 (홈·플랫폼·privacy·sitemap/robots·OG)
+  icon.tsx · apple-icon.tsx  나침반 파비콘
 components/
   layout/                    헤더/크롬·사이드바·푸터·로딩 셸
   reviews/                   후기 카드·무한스크롤·후기 SEO
@@ -190,6 +224,7 @@ data/
   offerTypes.ts              상품 허브 정의
   reviews/reviewSeoContent.ts
 lib/
+  brand/compassMark.tsx      파비콘·Apple 아이콘용 나침반
   content/catalog.ts         Sanity 플랫폼·쿠폰 조회
   seo.ts
   og/                        OG 이미지 렌더 + Pretendard 폰트
