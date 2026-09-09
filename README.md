@@ -117,6 +117,18 @@ npm run build && npm start
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | canonical/OG 기준 URL (배포 시 **필수**, 예: `https://xxx.vercel.app`) |
 | `NAVER_BLOG_ID` | 네이버 블로그 ID (기본 `dlthdus12345`) |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Sanity 프로젝트 ID ([manage](https://www.sanity.io/manage)) |
+| `NEXT_PUBLIC_SANITY_DATASET` | 데이터셋 (기본 `production`) |
+| `NEXT_PUBLIC_SANITY_API_VERSION` | GROQ API 날짜 (예: `2026-09-09`) |
+
+### Sanity 연결
+
+1. [sanity.io/manage](https://www.sanity.io/manage)에서 프로젝트 생성
+2. `.env.example`을 `.env.local`로 복사한 뒤 `NEXT_PUBLIC_SANITY_PROJECT_ID` 입력
+3. `npx sanity login` 후 `npm run sanity:dev` → 로컬 Studio (`http://localhost:3333`)
+4. Studio만 클라우드에 올릴 때 `npm run sanity:deploy`
+
+스키마는 `sanity/schemaTypes` (지금은 비어 있음). 사이트 페이지는 아직 mock을 읽고, `sanity/lib/client.ts`는 다음 단계에서 getter에 연결한다.
 
 ---
 
@@ -178,6 +190,12 @@ lib/
   og/                        OG 이미지 렌더 + Pretendard 폰트
   reviews/                   RSS·키워드·홈 후기 fetch
 types/coupon.ts
+sanity/
+  env.ts                     프로젝트 ID·dataset
+  lib/client.ts              GROQ 클라이언트 (아직 페이지 미연결)
+  schemaTypes/               Studio 스키마 (비어 있음)
+sanity.config.ts
+sanity.cli.ts
 ```
 
 ---
