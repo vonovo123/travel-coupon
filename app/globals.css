@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f3efe6;
+  --foreground: #0b132b;
+  --deep-navy: #0b132b;
+  --deep-navy-muted: #1c2541;
+  --starlight-gold: #f3a712;
+  --light-sand: #f3efe6;
+  --parchment: #fbf7f0;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  overflow-x: clip;
+  max-width: 100%;
+  font-family:
+    "Pretendard Variable",
+    Pretendard,
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    system-ui,
+    sans-serif;
+}
+
+.hero-ship-deco {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 32%,
+    black 68%
+  );
+  mask-image: linear-gradient(90deg, transparent 0%, transparent 32%, black 68%);
+}
+
+@media (min-width: 768px) {
+  .hero-ship-deco {
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 18%,
+      black 48%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 18%,
+      black 48%
+    );
+  }
+}
