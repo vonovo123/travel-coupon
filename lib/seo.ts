@@ -20,20 +20,39 @@ export function absoluteUrl(path = "/"): string {
 }
 
 export const defaultDescription =
-  "할인 코드를 찾아 헤매는 여행자의 종착지, 코드세이아. 아고다·마이리얼트립·트립닷컴·호텔스닷컴·클룩·Nol·익스피디아·부킹닷컴·야놀자·여기어때·에어비앤비의 숨겨진 할인코드를 한곳에서 확인하세요.";
+  "할인 코드를 찾아 헤매는 여행자의 종착지, 코드세이아. 아고다·마이리얼트립·트립닷컴·호텔스닷컴·클룩·Nol·익스피디아·부킹닷컴·여기어때·에어비앤비의 숨겨진 할인코드를 한곳에서 확인하세요.";
 
 export function getFreshness() {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Seoul",
     year: "numeric",
     month: "numeric",
+    day: "numeric",
   }).formatToParts(new Date());
 
   return {
     year: Number(parts.find((part) => part.type === "year")?.value),
     month: Number(parts.find((part) => part.type === "month")?.value),
+    day: Number(parts.find((part) => part.type === "day")?.value),
   };
 }
+
+export function formatSeoulUpdatedAt() {
+  const { year, month, day } = getFreshness();
+  return `${year}년 ${month}월 ${day}일`;
+}
+
+const previewRobots = {
+  index: true,
+  follow: true,
+  googleBot: {
+    index: true,
+    follow: true,
+    "max-image-preview": "large" as const,
+    "max-snippet": -1,
+    "max-video-preview": -1,
+  },
+};
 
 export function buildHomeMetadata(): Metadata {
   const { year, month } = getFreshness();
@@ -54,10 +73,7 @@ export function buildHomeMetadata(): Metadata {
       "코드세이아 항해일지",
       "여행 할인코드",
     ],
-    robots: {
-      index: true,
-      follow: true,
-    },
+    robots: previewRobots,
     alternates: {
       canonical: "/",
     },
@@ -77,12 +93,21 @@ export function buildHomeMetadata(): Metadata {
   };
 }
 
-export function platformMetadata(platform: PlatformInfo): Metadata {
+export function platformMetadata(
+  platform: PlatformInfo,
+  copy?: { title?: string; description?: string },
+): Metadata {
   const { year, month } = getFreshness();
-  const title = `${year}년 ${month}월 ${platform.name} 할인코드`;
-  const description = `${year}년 ${month}월 ${platform.name} 숙소·항공·투어 할인코드. 코드세이아에서 복사한 뒤 ${platform.name} 결제창에 붙여넣으세요.`;
+  const title =
+    copy?.title ?? `${year}년 ${month}월 ${platform.name} 할인코드`;
+  const description =
+    copy?.description ??
+    `${year}년 ${month}월 ${platform.name} 숙소·항공·투어 할인코드. 코드세이아에서 복사한 뒤 ${platform.name} 결제창에 붙여넣으세요.`;
   const path = `/${platform.slug}`;
   const shouldIndex = platform.listed;
+  const robots = shouldIndex
+    ? previewRobots
+    : { index: false, follow: false };
 
   return {
     title,
@@ -93,10 +118,7 @@ export function platformMetadata(platform: PlatformInfo): Metadata {
       `${platform.name} 프로모션 코드`,
       `${platform.name} 추가 할인`,
     ],
-    robots: {
-      index: shouldIndex,
-      follow: shouldIndex,
-    },
+    robots,
     alternates: {
       canonical: shouldIndex ? path : undefined,
     },
@@ -116,12 +138,19 @@ export function platformMetadata(platform: PlatformInfo): Metadata {
   };
 }
 
-export function offerTypeMetadata(hub: OfferTypeInfo): Metadata {
+export function offerTypeMetadata(
+  hub: OfferTypeInfo,
+  copy?: { title?: string; description?: string },
+): Metadata {
   const { year, month } = getFreshness();
-  const title = `${year}년 ${month}월 ${hub.label}`;
-  const description = `${year}년 ${month}월 ${hub.label}. ${hub.shortDescription}`;
+  const title = copy?.title ?? `${year}년 ${month}월 ${hub.label}`;
+  const description =
+    copy?.description ?? `${year}년 ${month}월 ${hub.label}. ${hub.shortDescription}`;
   const path = `/${hub.slug}`;
   const shouldIndex = hub.listed;
+  const robots = shouldIndex
+    ? previewRobots
+    : { index: false, follow: false };
 
   return {
     title,
@@ -133,10 +162,7 @@ export function offerTypeMetadata(hub: OfferTypeInfo): Metadata {
       `${hub.label} ${month}월`,
       "여행 할인코드",
     ],
-    robots: {
-      index: shouldIndex,
-      follow: shouldIndex,
-    },
+    robots,
     alternates: {
       canonical: shouldIndex ? path : undefined,
     },

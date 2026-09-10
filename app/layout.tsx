@@ -23,6 +23,13 @@ export function generateMetadata(): Metadata {
     robots: {
       index: true,
       follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
     },
     openGraph: home.openGraph,
     twitter: home.twitter,
@@ -35,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={notoSerifKr.variable}>
+    <html lang="ko-KR" className={notoSerifKr.variable}>
       <head>
         <link
           rel="stylesheet"

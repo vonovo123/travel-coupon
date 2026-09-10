@@ -29,6 +29,21 @@ export function SiteFooter({
           usageHint ? "mt-6" : ""
         }`}
       >
+        <nav aria-label="플랫폼 할인코드">
+          <p className="font-serif text-sm font-semibold text-deep-navy">
+            플랫폼
+          </p>
+          <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2">
+            {listedPlatforms.map((platform) => (
+              <li key={platform.slug}>
+                <Link href={`/${platform.slug}`} className={footerLinkClass}>
+                  {platform.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
         <nav aria-label="상품별 할인코드">
           <p className="font-serif text-sm font-semibold text-deep-navy">
             상품별
@@ -68,21 +83,6 @@ export function SiteFooter({
                 </li>
               );
             })}
-          </ul>
-        </nav>
-
-        <nav aria-label="플랫폼 할인코드">
-          <p className="font-serif text-sm font-semibold text-deep-navy">
-            플랫폼
-          </p>
-          <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2">
-            {listedPlatforms.map((platform) => (
-              <li key={platform.slug}>
-                <Link href={`/${platform.slug}`} className={footerLinkClass}>
-                  {platform.name}
-                </Link>
-              </li>
-            ))}
           </ul>
         </nav>
 

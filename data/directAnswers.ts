@@ -166,23 +166,6 @@ const platformDirectAnswers: Record<Platform, DirectAnswer> = {
       },
     ],
   },
-  야놀자: {
-    leadQuestion: "야놀자 쿠폰 어디에 넣어?",
-    leadAnswer:
-      "결제 화면에서 쿠폰 선택 → 코드 직접 입력으로 넣으세요. 모텔 쿠폰과 레저 쿠폰은 따로고, 핫딜은 거절되는 경우가 많습니다.",
-    followUps: [
-      {
-        question: "야놀자 레저 쿠폰 모텔에도 돼?",
-        answer:
-          "안 됩니다. 모텔·호텔은 숙소 쿠폰만, 워터파크·입장권은 레저 쿠폰만 됩니다.",
-      },
-      {
-        question: "야놀자 핫딜 쿠폰 적용 안 됨?",
-        answer:
-          "이미 깎인 핫딜·타임세일은 코드 제외인 경우가 많습니다. 일반 요금+쿠폰과 핫딜가를 비교하세요.",
-      },
-    ],
-  },
   여기어때: {
     leadQuestion: "여기어때 쿠폰 어디에 등록해?",
     leadAnswer:

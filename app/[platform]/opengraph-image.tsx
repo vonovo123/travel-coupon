@@ -13,13 +13,14 @@ interface PlatformOgProps {
 }
 
 export async function generateImageMetadata({ params }: PlatformOgProps) {
+  const { year, month } = getFreshness();
   const offerHub = await getOfferMenuBySlug(params.platform);
   const platform = offerHub
     ? undefined
     : await getPlatformBySlug(params.platform);
   const alt = offerHub
-    ? `${offerHub.label} | 코드세이아`
-    : `${platform?.name ?? "플랫폼"} 할인코드 | 코드세이아`;
+    ? `${year}년 ${month}월 ${offerHub.label} | 코드세이아`
+    : `${year}년 ${month}월 ${platform?.name ?? "플랫폼"} 할인코드 | 코드세이아`;
 
   return [
     {

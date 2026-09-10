@@ -19,7 +19,7 @@ export function SeoContentSection({
 }: SeoContentSectionProps) {
   const topic = activePlatform ?? sectionLabel;
   const guideHeading = activePlatform
-    ? `${activePlatform} 할인 가이드`
+    ? `${activePlatform} 할인코드 적용 가이드`
     : topic
       ? `${topic} 가이드`
       : "플랫폼별 할인 가이드";

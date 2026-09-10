@@ -85,15 +85,6 @@ export const platforms: PlatformInfo[] = [
     listed: true,
   },
   {
-    name: "야놀자",
-    slug: "yanolja",
-    color: "#FF3478",
-    textClass: "text-[#E02A68]",
-    affiliateLink: "https://www.yanolja.com",
-    initial: "Y",
-    listed: true,
-  },
-  {
     name: "여기어때",
     slug: "yeogi",
     color: "#FF4D4D",
@@ -264,16 +255,6 @@ export const coupons: Coupon[] = [
     validUntil: "2026.12.31까지",
   },
   {
-    id: "yanolja-motel-10",
-    ...couponDefaults("야놀자"),
-    offerType: "stay",
-    category: "국내",
-    title: "모텔·호텔 10% 할인",
-    description: "주중 예약, 핫딜 상품 제외될 수 있음",
-    code: "YANOLJA10",
-    validUntil: "2026.12.31까지",
-  },
-  {
     id: "yeogi-pension-8",
     ...couponDefaults("여기어때"),
     offerType: "stay",
@@ -312,16 +293,6 @@ export const coupons: Coupon[] = [
     description: "로그인 후 결제, 등급별 중복 제한 있을 수 있음",
     code: "GENIUS6",
     validUntil: "2026.12.15까지",
-  },
-  {
-    id: "yanolja-leisure-8",
-    ...couponDefaults("야놀자"),
-    offerType: "tour",
-    category: "국내",
-    title: "레저·입장권 8% 할인",
-    description: "숙소 쿠폰과 별도, 핫딜 티켓 제외될 수 있음",
-    code: "YANLEISURE8",
-    validUntil: "2026.11.30까지",
   },
   {
     id: "yeogi-weekend-7",
@@ -405,12 +376,6 @@ export const platformGuides: GuideItem[] = [
     platform: "부킹닷컴",
     title: "부킹닷컴 할인코드와 Genius 할인",
     body: "부킹닷컴 코드는 예약 마지막 단계의 할인 코드/바우처 칸에 입력합니다. Genius 등급 할인이 이미 붙은 숙소는 추가 코드가 막히는 경우가 있으니, 로그인 전후 요금과 코드 적용가를 비교하세요. 일부 숙소는 코드를 넣으면 Genius 할인이 사라지기도 합니다. 모바일 앱 전용 코드는 웹 결제창에서 거절될 수 있습니다. 무료 취소 마감 시간과 선결제/현장결제 여부도 코드 적용 후에 한 번 더 확인하는 편이 안전합니다.",
-  },
-  {
-    id: "guide-yanolja",
-    platform: "야놀자",
-    title: "야놀자 숙소·레저 할인코드 사용법",
-    body: "야놀자 할인코드는 결제 화면에서 쿠폰 선택 → 코드 직접 입력으로 넣습니다. 모텔·호텔 숙소 코드와 레저·입장권 코드가 분리되어 있어, 숙소 결제창에 레저 코드를 넣으면 거절됩니다. 주중 전용 코드는 금·토 체크인에 막히고, 핫딜·타임세일 객실은 코드 제외 대상인 경우가 많습니다. 같은 숙소의 일반 요금+코드와 핫딜가를 비교하세요. 앱 쿠폰함과 웹 직접 입력 코드가 다를 수 있으니, 코드 설명의 앱 전용 여부를 확인합니다.",
   },
   {
     id: "guide-yeogi",
@@ -532,18 +497,6 @@ export const paymentTips: PaymentTip[] = [
     platform: "부킹닷컴",
     title: "부킹닷컴 페이 결제와 앱 전용가",
     body: "부킹닷컴은 국내 페이 선택이 숙소마다 다릅니다. 페이가 보이면 코드 적용 → 페이 선택 순으로 금액이 바뀌는지 보고, 안 보이면 카드+Genius+코드 조합과만 비교하세요. 앱 전용가는 웹에서 페이를 골라도 같은 금액이 아닐 수 있습니다. 앱 쿠폰은 앱 결제에만 붙는 경우가 많으니, 코드 설명의 앱 전용 여부를 확인한 뒤 결제 창을 고르세요.",
-  },
-  {
-    id: "card-yanolja",
-    platform: "야놀자",
-    title: "야놀자 국내 카드 즉시할인",
-    body: "야놀자는 우리·신한 등 국내 카드 즉시할인이 숙소 결제창에 자주 뜹니다. 주중 예약과 주말·연박은 카드 이벤트 대상이 다를 수 있고, 핫딜 객실은 카드 할인이 빠진 채 결제되는 경우가 있습니다. 레저 티켓은 숙소 카드 프로모션과 별도이니, 숙소 결제창에서만 카드 배너를 확인하세요. 코드 적용 뒤에도 무이자 할부가 되는 편이고, 한도는 달마다 달라집니다.",
-  },
-  {
-    id: "pay-yanolja",
-    platform: "야놀자",
-    title: "야놀자 네이버페이·카카오페이 중복",
-    body: "야놀자 국내 숙소는 할인코드 다음에 네이버페이·카카오페이·토스페이를 고르면 페이 즉시할인이 한 겹 더 붙는 경우가 많습니다. 핫딜 객실은 페이 쿠폰 제외 대상일 수 있으니, 코드만 넣었을 때와 페이까지 넣었을 때 금액이 같은지 보세요. 레저와 숙소를 한 번에 결제하면 페이 쿠폰이 한쪽만 적용되기도 합니다. 포인트 적립과 즉시할인 중 하나만 되는 달이면 즉시할인 쪽이 보통 더 큽니다.",
   },
   {
     id: "card-yeogi",
@@ -757,27 +710,6 @@ export const faqs: FaqItem[] = [
     question: "부킹닷컴 쿠폰은 현장결제에도 되나요?",
     answer:
       "숙소마다 다릅니다. 선결제만 코드가 되는 곳과, 현장결제로 바꾸면 코드 칸이 사라지는 곳이 있습니다. 칸이 없으면 그 요금은 쿠폰 제외입니다. 무료 취소 마감 시간도 결제 방식에 따라 달라지니 코드 적용 후에 한 번 더 확인하세요.",
-  },
-  {
-    id: "faq-yanolja-hotdeal",
-    platform: "야놀자",
-    question: "야놀자 할인코드는 어디에 입력하나요?",
-    answer:
-      "결제 화면에서 쿠폰 선택 → 코드 직접 입력으로 넣으세요. 주중용 코드를 주말 예약에 넣으면 막히고, 레저 코드는 숙소 칸에 넣어도 거절됩니다.",
-  },
-  {
-    id: "faq-yanolja-leisure",
-    platform: "야놀자",
-    question: "야놀자 레저 쿠폰을 모텔에도 쓸 수 있나요?",
-    answer:
-      "안 됩니다. 모텔·호텔은 숙소 쿠폰만, 워터파크·입장권은 레저 쿠폰만 됩니다. 쿠폰이 막혀도 카드·페이 할인은 결제 다음 단계에서 따로 확인할 수 있습니다.",
-  },
-  {
-    id: "faq-yanolja-refund",
-    platform: "야놀자",
-    question: "야놀자 핫딜에서 쿠폰 적용이 안 되면 왜인가요?",
-    answer:
-      "이미 깎인 핫딜·타임세일은 야놀자 할인코드 제외인 경우가 많습니다. 같은 숙소의 일반 요금+쿠폰과 핫딜가를 비교하세요.",
   },
   {
     id: "faq-yeogi-weekend",

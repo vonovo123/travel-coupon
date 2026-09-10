@@ -27,6 +27,10 @@ export interface PlatformInfo {
   textClass: string;
   affiliateLink: string;
   initial: string;
+  /** Sanity에 올린 플랫폼 썸네일. 없으면 이니셜·아이콘을 쓴다. */
+  imageUrl?: string;
+  /** 본문 상단 와이드 배너. */
+  bannerUrl?: string;
   /** false면 메뉴·사이트맵에서 숨기고 noindex. 직접 URL은 유지. */
   listed: boolean;
 }
@@ -36,13 +40,16 @@ export interface Coupon {
   platform: Platform;
   initial: string;
   logoUrl: string;
+  /** 카드 이미지. 없으면 플랫폼 이미지, 그것도 없으면 이니셜. */
+  imageUrl?: string;
   offerType: OfferType;
   category: Category;
   year?: number;
   month?: number;
   title: string;
   description: string;
-  code: string;
+  /** 없으면 카드에 쿠폰 받기만 보여 준다. */
+  code?: string;
   affiliateLink: string;
   validUntil: string;
 }

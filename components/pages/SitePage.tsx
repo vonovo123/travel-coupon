@@ -1,6 +1,7 @@
-import { CouponList } from "@/components/coupons/CouponList";
+import { CouponSections } from "@/components/coupons/CouponSections";
 import { PlatformSidebarRail } from "@/components/layout/PlatformSidebarRail";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { DiscountBanner } from "@/components/media/DiscountBanner";
 import { ReviewFeedProgressProvider } from "@/components/reviews/ReviewFeedProgress";
 import { StickyPageChrome } from "@/components/layout/StickyPageChrome";
 import { ReviewInfiniteList } from "@/components/reviews/ReviewInfiniteList";
@@ -24,7 +25,15 @@ import {
   getOfferMenuBySlug,
   getPlatformBySlug,
 } from "@/lib/content/catalog";
-import { getFreshness } from "@/lib/seo";
+import { formatSeoulUpdatedAt, getFreshness } from "@/lib/seo";
+import {
+  discountImageAlt,
+  discountPageDescription,
+  discountPageLead,
+  hubPageDescription,
+  hubPageTitle,
+  platformPageTitle,
+} from "@/lib/discountPageCopy";
 import { questionFromCoupon } from "@/lib/searchQuestions";
 import type { ReviewPost } from "@/types/coupon";
 
@@ -76,27 +85,30 @@ export async function SitePage({
       : platform
         ? getFaqsByPlatformName(platform.name)
         : [];
-  const { year, month } = getFreshness();
-  const jsonLdName = offerHub
-    ? `${year}년 ${month}월 ${offerHub.label}`
+  const { year, month, day } = getFreshness();
+  const updatedLabel = formatSeoulUpdatedAt();
+  const dateModified = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  const platformApplyHint = platform
+    ? `코드세이아에서 확인하고 ${platform.name}에서 적용하세요.`
+    : "";
+  const pageTitle = offerHub
+    ? hubPageTitle(offerHub.label)
     : platform
-      ? `${year}년 ${month}월 ${platform.name} 할인코드`
+      ? platformPageTitle(platform.name, coupons)
       : `${year}년 ${month}월 코드세이아 여행 후기`;
+  const jsonLdName = pageTitle;
   const jsonLdDescription = offerHub
-    ? offerHub.shortDescription
+    ? hubPageDescription(offerHub.label, offerHub.shortDescription, coupons)
     : platform
-      ? `${year}년 ${month}월 ${platform.name} 숙소·투어·항공 할인코드를 코드세이아에서 확인하고 결제창에 붙여넣으세요.`
+      ? discountPageDescription(platform.name, coupons, platformApplyHint)
       : "코드세이아 항해일지에 남긴 여행 후기";
   const pageLead = offerHub
-    ? `${year}년 ${month}월 ${offerHub.label}입니다. ${offerHub.shortDescription}`
+    ? `${hubPageTitle(offerHub.label)}입니다. ${offerHub.shortDescription}`
     : platform
-      ? `${year}년 ${month}월 ${platform.name} 숙소·투어·항공 할인코드입니다. 코드를 복사한 뒤 ${platform.name} 결제창에 붙여넣으세요.`
+      ? discountPageLead(platform.name, coupons, platformApplyHint)
       : "";
   const currentSlug = offerHub?.slug ?? platformSlug;
   const path = currentSlug ? `/${currentSlug}` : "/";
-  const listHeading = offerHub
-    ? `${offerHub.label} ${coupons.length}개`
-    : `${platform?.name} 할인코드 ${coupons.length}개`;
   const couponFaqs = coupons.map((coupon) => {
     const item = questionFromCoupon(coupon);
     return {
@@ -123,6 +135,9 @@ export async function SitePage({
         offerHub={offerHub}
         listedOfferMenus={listedOfferMenus}
         listedPlatforms={listedPlatforms}
+        pageTitle={isHome ? undefined : pageTitle}
+        pageDescription={isHome ? undefined : jsonLdDescription}
+        updatedLabel={isHome ? undefined : updatedLabel}
       />
 
       <div className="mx-auto grid max-w-6xl gap-4 px-4 py-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
@@ -139,13 +154,31 @@ export async function SitePage({
               </>
             ) : (
               <>
-                <p className="mb-3 text-sm leading-relaxed text-deep-navy/70">
-                  {pageLead}
-                </p>
-                <p className="mb-2 font-serif text-sm font-semibold text-deep-navy/70">
-                  {listHeading}
-                </p>
-                <CouponList coupons={coupons} />
+                {platform?.bannerUrl ? (
+                  <DiscountBanner
+                    src={platform.bannerUrl}
+                    alt={discountImageAlt({ platformName: platform.name })}
+                    lead={pageLead}
+                    meta={`최종 업데이트: ${updatedLabel}${
+                      coupons.length > 0 ? ` · 혜택 ${coupons.length}개` : ""
+                    }`}
+                  />
+                ) : (
+                  <>
+                    <p className="mb-3 text-sm leading-relaxed text-deep-navy/70">
+                      {pageLead}
+                    </p>
+                    <p className="mb-4 text-sm text-deep-navy/55">
+                      최종 업데이트: {updatedLabel}
+                      {coupons.length > 0 ? ` · 혜택 ${coupons.length}개` : ""}
+                    </p>
+                  </>
+                )}
+                <CouponSections
+                  coupons={coupons}
+                  platformName={platform?.name}
+                  hubLabel={offerHub?.label}
+                />
                 <SeoContentSection
                   guides={guides}
                   paymentTips={pagePaymentTips}
@@ -194,6 +227,7 @@ export async function SitePage({
         reviews={reviews}
         faqs={isHome ? pageFaqs : structuredFaqs}
         breadcrumbs={breadcrumbs}
+        dateModified={isHome ? undefined : dateModified}
       />
       {isHome ? (
         <ReviewFeedProgressProvider total={reviews.length}>

@@ -25,8 +25,16 @@ export const platformType = defineType({
       name: "name",
       title: "이름",
       type: "string",
-      description: "아고다, 야놀자처럼 화면에 보이는 이름",
+      description: "아고다, 여기어때처럼 화면에 보이는 이름",
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "listed",
+      title: "노출",
+      type: "boolean",
+      description:
+        "끄면 메뉴·사이트맵에서 숨깁니다. 켜 있어도 사이트가 보여주는 달에 할인코드가 없으면 자동으로 숨깁니다.",
+      initialValue: true,
     }),
     defineField({
       name: "slug",
@@ -59,31 +67,50 @@ export const platformType = defineType({
       name: "initial",
       title: "이니셜",
       type: "string",
-      description: "카드 로고 자리에 쓰는 한 글자",
+      description: "이미지가 없을 때 카드·메뉴 자리에 쓰는 한 글자",
       validation: (rule) => rule.required().max(2),
+    }),
+    defineField({
+      name: "image",
+      title: "플랫폼 이미지",
+      type: "image",
+      description:
+        "사이드바와 쿠폰 카드 기본 썸네일. 카드에 따로 이미지를 넣으면 카드는 그 이미지를 씁니다.",
+      options: { hotspot: true },
+      fields: [
+        defineField({
+          name: "alt",
+          title: "대체 텍스트",
+          type: "string",
+          description: "비우면 플랫폼 이름으로 채웁니다.",
+        }),
+      ],
     }),
     defineField({
       name: "color",
       title: "브랜드 색",
       type: "string",
-      description: "예: #5C2D91. 쿠폰 카드가 이 값을 로고 배경으로 씁니다.",
+      description: "예: #5C2D91. 이미지가 없을 때 로고 배경으로 씁니다.",
       validation: (rule) =>
         rule.required().regex(/^#([0-9A-Fa-f]{6})$/, {
           name: "hex",
           invert: false,
         }),
     }),
-    defineField({
-      name: "listed",
-      title: "메뉴·사이트맵에 공개",
-      type: "boolean",
-      initialValue: true,
-    }),
   ],
   preview: {
     select: {
       title: "name",
-      subtitle: "slug.current",
+      slug: "slug.current",
+      listed: "listed",
+      media: "image",
+    },
+    prepare({ title, slug, listed, media }) {
+      return {
+        title,
+        subtitle: `${slug ?? ""} · ${listed === false ? "비노출" : "노출"}`,
+        media,
+      };
     },
   },
 });

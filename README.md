@@ -38,7 +38,7 @@ Sanity 프로젝트 ID: `4gajz7je` / dataset `production`
 
 **플랫폼 할인코드**
 - `/hotelscom` `/tripcom` `/myrealtrip` `/agoda` `/klook` `/nol`
-- `/expedia` `/booking` `/yanolja` `/yeogi` `/airbnb` (가이드·결제팁·FAQ mock 포함, `listed: true`)
+- `/expedia` `/booking` `/yeogi` `/airbnb` (가이드·결제팁·FAQ mock 포함, `listed: true`). `/yanolja`는 `/nol`로 보냄
 - 쿠폰 가로바(복사 / 복사 & 적용), 플랫폼별 가이드·결제팁·FAQ
 - 플랫폼·할인코드는 Sanity (`lib/content/catalog.ts`). 가이드·FAQ·후기 폴백은 `data/mockData.ts`
 - `코드 복사 & 적용하기`: 이 페이지에서 먼저 복사. 실패하면 클립보드 권한 안내 얼럿 후 적용 페이지로 이동

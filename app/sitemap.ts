@@ -22,14 +22,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",
       priority: 0.3,
     },
-    ...listedOfferMenus.map((hub) => ({
-      url: `${siteUrl}/${hub.slug}`,
+    ...listedPlatforms.map((platform) => ({
+      url: `${siteUrl}/${platform.slug}`,
       lastModified,
       changeFrequency: "daily" as const,
       priority: 0.9,
     })),
-    ...listedPlatforms.map((platform) => ({
-      url: `${siteUrl}/${platform.slug}`,
+    ...listedOfferMenus.map((hub) => ({
+      url: `${siteUrl}/${hub.slug}`,
       lastModified,
       changeFrequency: "daily" as const,
       priority: 0.8,

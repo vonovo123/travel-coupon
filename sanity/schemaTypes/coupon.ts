@@ -73,13 +73,16 @@ export const couponType = defineType({
       name: "code",
       title: "할인코드",
       type: "string",
-      validation: (rule) => rule.required(),
+      description:
+        "비우면 카드에 「쿠폰 받기」만 나갑니다. 있으면 「코드 복사」가 나갑니다.",
+      validation: (rule) => rule.optional(),
     }),
     defineField({
       name: "description",
       title: "적용 조건",
       type: "text",
-      rows: 3,
+      rows: 6,
+      description: "한 줄에 조건 하나씩 적으면 카드에 줄바꿈으로 보입니다.",
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -89,11 +92,42 @@ export const couponType = defineType({
       description: "이 날짜까지 사용. 비우면 기간 미정으로 둡니다.",
     }),
     defineField({
+      name: "image",
+      title: "카드 이미지",
+      type: "image",
+      description: "비우면 플랫폼 이미지를 씁니다.",
+      options: { hotspot: true },
+      fields: [
+        defineField({
+          name: "alt",
+          title: "대체 텍스트",
+          type: "string",
+          description: "비우면 카드 제목으로 채웁니다.",
+        }),
+      ],
+    }),
+    defineField({
       name: "affiliateLink",
       title: "쿠폰 전용 제휴 링크",
       type: "url",
       description: "비우면 플랫폼 제휴 링크를 씁니다.",
-      validation: (rule) => rule.uri({ scheme: ["http", "https"] }),
+      validation: (rule) =>
+        rule.custom((value) => {
+          if (!value) {
+            return true;
+          }
+
+          try {
+            const parsed = new URL(value);
+            if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+              return true;
+            }
+          } catch {
+            // 아래 메시지로 처리
+          }
+
+          return "http 또는 https 주소여야 합니다.";
+        }),
     }),
   ],
   preview: {
@@ -103,14 +137,19 @@ export const couponType = defineType({
       platform: "platform.name",
       year: "year",
       month: "month",
+      media: "image",
+      platformImage: "platform.image",
     },
-    prepare({ title, code, platform, year, month }) {
+    prepare({ title, code, platform, year, month, media, platformImage }) {
       const period =
         year && month ? `${year}년 ${month}월` : "연도/월 미지정";
 
       return {
         title,
-        subtitle: [period, platform, code].filter(Boolean).join(" · "),
+        subtitle: [period, platform, code || "쿠폰 받기"]
+          .filter(Boolean)
+          .join(" · "),
+        media: media || platformImage,
       };
     },
   },

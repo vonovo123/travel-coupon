@@ -6,7 +6,8 @@ export const platformsQuery = groq`*[_type == "platform" && defined(slug.current
   affiliateLink,
   initial,
   color,
-  listed
+  listed,
+  "imageUrl": image.asset->url
 }`;
 
 export const offerMenusQuery = groq`*[_type == "offerMenu" && defined(slug.current)] | order(sortOrder asc, name asc) {
@@ -31,12 +32,14 @@ export const couponsQuery = groq`*[_type == "coupon" && defined(platform)] | ord
   category,
   validUntil,
   affiliateLink,
+  "imageUrl": image.asset->url,
   platform->{
     name,
     "slug": slug.current,
     affiliateLink,
     initial,
     color,
-    listed
+    listed,
+    "imageUrl": image.asset->url
   }
 }`;

@@ -99,8 +99,10 @@ export const offerMenuType = defineType({
     }),
     defineField({
       name: "listed",
-      title: "메뉴·사이트맵에 공개",
+      title: "노출",
       type: "boolean",
+      description:
+        "끄면 메뉴·사이트맵에서 숨깁니다. 켜 있어도 사이트가 보여주는 달에 할인코드가 없으면 자동으로 숨깁니다.",
       initialValue: true,
     }),
   ],

@@ -11,6 +11,8 @@ import {
   Star,
   Ticket,
 } from "lucide-react";
+import { BrandThumb } from "@/components/media/BrandThumb";
+import { discountImageAlt } from "@/lib/discountPageCopy";
 import type { OfferType, OfferTypeInfo, PlatformInfo } from "@/types/coupon";
 
 interface PlatformSidebarProps {
@@ -32,7 +34,6 @@ const platformIcons = {
   nol: Star,
   expedia: Plane,
   booking: Building2,
-  yanolja: BedDouble,
   yeogi: Home,
   airbnb: Home,
 } as const;
@@ -103,6 +104,60 @@ export function PlatformSidebar({
           dense ? "mt-1 text-[11px]" : "mt-1 text-xs"
         }`}
       >
+        플랫폼별
+      </p>
+      {listedPlatforms.map((platform) => {
+        const isActive = currentSlug === platform.slug;
+        const Icon =
+          platformIcons[platform.slug as keyof typeof platformIcons] ?? Compass;
+
+        return (
+          <Link
+            key={platform.slug}
+            href={`/${platform.slug}`}
+            aria-current={isActive ? "page" : undefined}
+            className={cardClass(isActive)}
+            onClick={onNavigate}
+          >
+            {platform.imageUrl ? (
+              <BrandThumb
+                src={platform.imageUrl}
+                alt={discountImageAlt({ platformName: platform.name })}
+                fallback={platform.initial}
+                className={dense ? "h-10 w-10" : "h-14 w-14"}
+              />
+            ) : (
+              <span
+                className={`flex shrink-0 items-center justify-center bg-deep-navy text-starlight-gold ${
+                  dense ? "h-10 w-10" : "h-14 w-14"
+                }`}
+              >
+                <Icon className={dense ? "h-5 w-5" : "h-6 w-6"} aria-hidden />
+              </span>
+            )}
+            <span
+              className={`min-w-0 flex-1 font-semibold leading-snug text-deep-navy ${
+                dense ? "text-sm" : "text-base sm:text-[17px]"
+              }`}
+            >
+              {platform.name} 할인코드
+            </span>
+            <span
+              className={`flex shrink-0 items-center justify-center bg-deep-navy text-xs font-bold text-starlight-gold ${
+                dense ? "h-9 w-9" : "h-11 w-11"
+              }`}
+            >
+              GO
+            </span>
+          </Link>
+        );
+      })}
+
+      <p
+        className={`font-serif text-deep-navy/45 ${
+          dense ? "mt-1 text-[11px]" : "mt-1 text-xs"
+        }`}
+      >
         상품별
       </p>
       {listedOfferMenus.map((hub) => {
@@ -130,51 +185,6 @@ export function PlatformSidebar({
               }`}
             >
               {hub.label}
-            </span>
-            <span
-              className={`flex shrink-0 items-center justify-center bg-deep-navy text-xs font-bold text-starlight-gold ${
-                dense ? "h-9 w-9" : "h-11 w-11"
-              }`}
-            >
-              GO
-            </span>
-          </Link>
-        );
-      })}
-
-      <p
-        className={`font-serif text-deep-navy/45 ${
-          dense ? "mt-1 text-[11px]" : "mt-1 text-xs"
-        }`}
-      >
-        플랫폼별
-      </p>
-      {listedPlatforms.map((platform) => {
-        const isActive = currentSlug === platform.slug;
-        const Icon =
-          platformIcons[platform.slug as keyof typeof platformIcons] ?? Compass;
-
-        return (
-          <Link
-            key={platform.slug}
-            href={`/${platform.slug}`}
-            aria-current={isActive ? "page" : undefined}
-            className={cardClass(isActive)}
-            onClick={onNavigate}
-          >
-            <span
-              className={`flex shrink-0 items-center justify-center bg-deep-navy text-starlight-gold ${
-                dense ? "h-10 w-10" : "h-14 w-14"
-              }`}
-            >
-              <Icon className={dense ? "h-5 w-5" : "h-6 w-6"} aria-hidden />
-            </span>
-            <span
-              className={`min-w-0 flex-1 font-semibold leading-snug text-deep-navy ${
-                dense ? "text-sm" : "text-base sm:text-[17px]"
-              }`}
-            >
-              {platform.name} 할인코드
             </span>
             <span
               className={`flex shrink-0 items-center justify-center bg-deep-navy text-xs font-bold text-starlight-gold ${

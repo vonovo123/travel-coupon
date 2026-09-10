@@ -33,6 +33,22 @@ export default defineConfig({
           month,
         }),
       },
+      {
+        id: "platform-listed",
+        title: "플랫폼 (노출)",
+        schemaType: "platform",
+        value: {
+          listed: true,
+        },
+      },
+      {
+        id: "platform-unlisted",
+        title: "플랫폼 (비노출)",
+        schemaType: "platform",
+        value: {
+          listed: false,
+        },
+      },
     ],
   },
 });

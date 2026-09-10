@@ -45,9 +45,40 @@ export const structure: StructureResolver = (S, context) =>
             .id("travel-desk")
             .title("여행")
             .items([
-              S.documentTypeListItem("platform")
+              S.listItem()
                 .id("travel-platforms")
-                .title("플랫폼"),
+                .title("플랫폼")
+                .child(
+                  S.list()
+                    .id("travel-platform-visibility")
+                    .title("플랫폼")
+                    .items([
+                      S.listItem()
+                        .id("travel-platforms-listed")
+                        .title("노출")
+                        .child(
+                          S.documentTypeList("platform")
+                            .id("travel-platform-listed")
+                            .title("노출")
+                            .filter("_type == \"platform\" && listed != false")
+                            .initialValueTemplates([
+                              S.initialValueTemplateItem("platform-listed"),
+                            ]),
+                        ),
+                      S.listItem()
+                        .id("travel-platforms-hidden")
+                        .title("비노출")
+                        .child(
+                          S.documentTypeList("platform")
+                            .id("travel-platform-hidden")
+                            .title("비노출")
+                            .filter("_type == \"platform\" && listed == false")
+                            .initialValueTemplates([
+                              S.initialValueTemplateItem("platform-unlisted"),
+                            ]),
+                        ),
+                    ]),
+                ),
               S.documentTypeListItem("offerMenu")
                 .id("travel-menus")
                 .title("메뉴"),

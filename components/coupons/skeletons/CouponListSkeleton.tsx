@@ -10,8 +10,7 @@ export function CouponCardSkeleton() {
       </div>
       <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-t border-deep-navy/10 pt-3">
         <div>
-          <div className="h-4 w-40 animate-pulse rounded-sm bg-deep-navy/15" />
-          <div className="mt-2 h-4 w-full animate-pulse rounded-sm bg-deep-navy/10" />
+          <div className="h-4 w-full animate-pulse rounded-sm bg-deep-navy/10" />
           <div className="mt-1.5 h-4 w-[80%] animate-pulse rounded-sm bg-deep-navy/10" />
           <div className="mt-2 h-3 w-28 animate-pulse rounded-sm bg-deep-navy/10" />
         </div>

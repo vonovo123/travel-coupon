@@ -1,5 +1,4 @@
 import { absoluteUrl, organizationId, siteName, websiteId } from "@/lib/seo";
-import { questionFromCoupon } from "@/lib/searchQuestions";
 import type { Coupon, FaqItem, ReviewPost } from "@/types/coupon";
 
 export interface BreadcrumbItem {
@@ -15,6 +14,7 @@ interface JsonLdProps {
   reviews?: ReviewPost[];
   faqs: FaqItem[];
   breadcrumbs?: BreadcrumbItem[];
+  dateModified?: string;
 }
 
 function toIsoDate(value: string): string | undefined {
@@ -36,6 +36,7 @@ export function JsonLd({
   reviews = [],
   faqs,
   breadcrumbs = [],
+  dateModified,
 }: JsonLdProps) {
   const useReviews = reviews.length > 0;
   const items = useReviews ? reviews : coupons;
@@ -94,10 +95,11 @@ export function JsonLd({
           position: index + 1,
           item: {
             "@type": "Offer",
-            name: questionFromCoupon(coupon).question,
+            name: coupon.title,
             description: coupon.description,
             category: coupon.platform,
             url: pageUrl,
+            ...(coupon.imageUrl ? { image: coupon.imageUrl } : {}),
             availabilityEnds: toIsoDate(coupon.validUntil),
             seller: {
               "@type": "Organization",
@@ -135,6 +137,12 @@ export function JsonLd({
     name,
     description,
     inLanguage: "ko-KR",
+    ...(dateModified
+      ? {
+          dateModified,
+          datePublished: dateModified,
+        }
+      : {}),
     isPartOf: {
       "@id": websiteId,
     },

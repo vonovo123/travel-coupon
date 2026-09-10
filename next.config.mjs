@@ -1,10 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/yanolja",
+        destination: "/nol",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "images.unsplash.com",
+        hostname: "cdn.sanity.io",
       },
       {
         protocol: "https",

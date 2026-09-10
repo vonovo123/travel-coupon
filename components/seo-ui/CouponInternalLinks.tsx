@@ -54,17 +54,17 @@ export function CouponInternalLinks({
     return (
       <nav aria-label="할인코드 바로가기" className="mt-6 space-y-4">
         <LinkGroup
-          title="상품별 할인코드"
-          items={listedOfferMenus.map((hub) => ({
-            href: `/${hub.slug}`,
-            label: hub.label,
-          }))}
-        />
-        <LinkGroup
           title="플랫폼 할인코드"
           items={listedPlatforms.map((item) => ({
             href: `/${item.slug}`,
             label: `${item.name} 할인코드`,
+          }))}
+        />
+        <LinkGroup
+          title="상품별 할인코드"
+          items={listedOfferMenus.map((hub) => ({
+            href: `/${hub.slug}`,
+            label: hub.label,
           }))}
         />
       </nav>

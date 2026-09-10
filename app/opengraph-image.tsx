@@ -2,7 +2,7 @@ import { getFreshness } from "@/lib/seo";
 import { ogContentType, ogSize, renderOgImage } from "@/lib/og/renderOgImage";
 
 export const runtime = "nodejs";
-export const alt = "코드세이아 — 여행 후기와 할인코드";
+export const alt = "2026년 여행 후기 · 할인코드 | 코드세이아";
 export const size = ogSize;
 export const contentType = ogContentType;
 

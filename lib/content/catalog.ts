@@ -27,6 +27,7 @@ interface SanityPlatform {
   initial?: string;
   color?: string;
   listed?: boolean;
+  imageUrl?: string;
 }
 
 interface SanityOfferMenu {
@@ -50,6 +51,7 @@ interface SanityCoupon {
   category?: string;
   validUntil?: string;
   affiliateLink?: string;
+  imageUrl?: string;
   platform?: SanityPlatform | null;
 }
 
@@ -80,6 +82,34 @@ function isHubRegion(value: string): value is HubRegion {
 
 function periodKey(year: number, month: number) {
   return year * 12 + month;
+}
+
+function firstText(...values: (string | undefined | null)[]): string | undefined {
+  for (const value of values) {
+    const trimmed = value?.trim();
+    if (trimmed) {
+      return trimmed;
+    }
+  }
+
+  return undefined;
+}
+
+/** 로컬에서 썸네일·배너 위치를 보려고만 쓴다. Sanity 이미지가 있으면 그걸 우선한다. */
+function previewImageUrl(kind: "platform" | "stay" | "banner", slug?: string) {
+  if (process.env.NODE_ENV !== "development" || slug !== "myrealtrip") {
+    return undefined;
+  }
+
+  if (kind === "stay") {
+    return "/images/mockups/coupon-stay.png";
+  }
+
+  if (kind === "banner") {
+    return "/images/mockups/banner-myrealtrip.png";
+  }
+
+  return "/images/mockups/platform-myrealtrip.png";
 }
 
 /** 이번 달 코드를 쓰고, 없으면 가장 최근 연/월 묶음을 쓴다. */
@@ -120,9 +150,12 @@ function mapPlatform(
     return null;
   }
 
-  if (reservedSlugs.has(doc.slug)) {
+  if (reservedSlugs.has(doc.slug) || doc.slug === "yanolja") {
     return null;
   }
+
+  const imageUrl = firstText(doc.imageUrl, previewImageUrl("platform", doc.slug));
+  const bannerUrl = previewImageUrl("banner", doc.slug);
 
   return {
     name: doc.name,
@@ -132,6 +165,8 @@ function mapPlatform(
     affiliateLink: doc.affiliateLink,
     initial: doc.initial || doc.name.slice(0, 1),
     listed: doc.listed !== false,
+    ...(imageUrl ? { imageUrl } : {}),
+    ...(bannerUrl ? { bannerUrl } : {}),
   };
 }
 
@@ -166,7 +201,6 @@ function mapCoupon(doc: SanityCoupon): Coupon | null {
   if (
     !platform ||
     !doc.title ||
-    !doc.code ||
     !doc.description ||
     !doc.offerType ||
     !doc.category ||
@@ -175,6 +209,13 @@ function mapCoupon(doc: SanityCoupon): Coupon | null {
   ) {
     return null;
   }
+
+  const code = doc.code?.trim();
+  const imageUrl = firstText(
+    doc.imageUrl,
+    previewImageUrl("stay", platform.slug),
+    platform.imageUrl,
+  );
 
   return {
     id: doc._id,
@@ -187,9 +228,10 @@ function mapCoupon(doc: SanityCoupon): Coupon | null {
     category: doc.category,
     title: doc.title,
     description: doc.description,
-    code: doc.code,
+    ...(code ? { code } : {}),
     affiliateLink: doc.affiliateLink || platform.affiliateLink,
     validUntil: formatValidUntil(doc.validUntil),
+    ...(imageUrl ? { imageUrl } : {}),
   };
 }
 
@@ -227,13 +269,30 @@ export const getSanityPlatforms = cache(async (): Promise<PlatformInfo[]> => {
 });
 
 export async function getListedOfferMenus(): Promise<OfferTypeInfo[]> {
-  const menus = await getSanityOfferMenus();
-  return menus.filter((menu) => menu.listed);
+  const [menus, coupons] = await Promise.all([
+    getSanityOfferMenus(),
+    getSanityCoupons(),
+  ]);
+
+  return menus.filter(
+    (menu) =>
+      menu.listed &&
+      coupons.some(
+        (coupon) =>
+          coupon.offerType === menu.type &&
+          (coupon.category === menu.category || coupon.category === "공통"),
+      ),
+  );
 }
 
 export async function getUnlistedOfferMenus(): Promise<OfferTypeInfo[]> {
-  const menus = await getSanityOfferMenus();
-  return menus.filter((menu) => !menu.listed);
+  const [menus, listed] = await Promise.all([
+    getSanityOfferMenus(),
+    getListedOfferMenus(),
+  ]);
+  const listedSlugs = new Set(listed.map((menu) => menu.slug));
+
+  return menus.filter((menu) => !listedSlugs.has(menu.slug));
 }
 
 export async function getOfferMenuBySlug(
@@ -258,13 +317,25 @@ export const getSanityCoupons = cache(async (): Promise<Coupon[]> => {
 });
 
 export async function getListedPlatforms(): Promise<PlatformInfo[]> {
-  const platforms = await getSanityPlatforms();
-  return platforms.filter((platform) => platform.listed);
+  const [platforms, coupons] = await Promise.all([
+    getSanityPlatforms(),
+    getSanityCoupons(),
+  ]);
+  const namesWithCodes = new Set(coupons.map((coupon) => coupon.platform));
+
+  return platforms.filter(
+    (platform) => platform.listed && namesWithCodes.has(platform.name),
+  );
 }
 
 export async function getUnlistedPlatforms(): Promise<PlatformInfo[]> {
-  const platforms = await getSanityPlatforms();
-  return platforms.filter((platform) => !platform.listed);
+  const [platforms, listed] = await Promise.all([
+    getSanityPlatforms(),
+    getListedPlatforms(),
+  ]);
+  const listedSlugs = new Set(listed.map((platform) => platform.slug));
+
+  return platforms.filter((platform) => !listedSlugs.has(platform.slug));
 }
 
 export async function getPlatformBySlug(
