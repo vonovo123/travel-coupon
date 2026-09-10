@@ -44,7 +44,7 @@ Sanity 프로젝트 ID: `4gajz7je` / dataset `production`
 - `코드 복사 & 적용하기`: 이 페이지에서 먼저 복사. 실패하면 클립보드 권한 안내 얼럿 후 적용 페이지로 이동
 
 **Sanity / 배포**
-- Studio 스키마: `platform`, `coupon`. 시드 `npm run sanity:seed` (재실행 시 Studio에서 고친 코드가 mock으로 덮임)
+- Studio 메뉴: `여행 → 플랫폼` / `여행 → 메뉴` / `여행 → 코드 → 26년 9월`. 상품 메뉴 시드 `npm run sanity:seed-menus` (이미 있는 문서는 덮지 않음). 쿠폰 시드 `npm run sanity:seed` (재실행 시 Studio에서 고친 코드가 mock으로 덮임)
 - 사이트는 공개된 문서를 CDN으로 읽음(토큰 없음). 배포 환경 1시간 ISR, 로컬은 fetch 캐시 끔
 - Vercel env: `NEXT_PUBLIC_SANITY_PROJECT_ID` / `DATASET` / `API_VERSION` (Production·Preview·Development)
 - 사이트는 서버에서 Sanity를 읽으므로 CORS에 Vercel URL이 없어도 됨. CORS origin은 로컬 Studio `http://localhost:3333`

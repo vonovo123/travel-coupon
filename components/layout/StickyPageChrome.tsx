@@ -13,14 +13,18 @@ interface StickyPageChromeProps {
   currentSlug?: string;
   platform?: PlatformInfo;
   offerHub?: OfferTypeInfo;
+  listedOfferMenus?: OfferTypeInfo[];
   listedPlatforms: PlatformInfo[];
+  headingAs?: "h1" | "p";
 }
 
 export function StickyPageChrome({
   currentSlug,
   platform,
   offerHub,
+  listedOfferMenus = [],
   listedPlatforms,
+  headingAs,
 }: StickyPageChromeProps) {
   const [compact, setCompact] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -104,6 +108,7 @@ export function StickyPageChrome({
           compact={compact}
           menuOpen={menuOpen}
           onMenuToggle={() => setMenuOpen((open) => !open)}
+          headingAs={headingAs}
           reviewProgress={
             reviewProgress
               ? {
@@ -127,6 +132,7 @@ export function StickyPageChrome({
               </p>
               <PlatformSidebar
                 currentSlug={currentSlug}
+                listedOfferMenus={listedOfferMenus}
                 listedPlatforms={listedPlatforms}
                 onNavigate={closeMenu}
                 dense

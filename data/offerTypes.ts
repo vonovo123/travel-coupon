@@ -1,3 +1,4 @@
+import { getFreshness } from "@/lib/seo";
 import type {
   FaqItem,
   GuideItem,
@@ -44,20 +45,14 @@ function buildOfferHub(
     label,
     searchKeyword: `${region.category}${productName} 할인코드`,
     shortDescription: `${region.category} ${offerNouns[type]} 할인코드를 여행 플랫폼과 관계없이 한곳에서 확인하세요.`,
+    listed: true,
   };
 }
 
-export const offerTypeHubs: OfferTypeInfo[] = offerTypes.flatMap((type) =>
+/** Sanity 메뉴 시드용. 사이트는 catalog에서 offerMenu를 읽습니다. */
+export const defaultOfferMenus: OfferTypeInfo[] = offerTypes.flatMap((type) =>
   hubRegions.map((region) => buildOfferHub(type, region)),
 );
-
-export const offerTypeHubMap = Object.fromEntries(
-  offerTypeHubs.map((hub) => [hub.slug, hub]),
-) as Record<string, OfferTypeInfo>;
-
-export function getOfferTypeBySlug(slug: string): OfferTypeInfo | undefined {
-  return offerTypeHubMap[slug];
-}
 
 export const offerTypeGuides: GuideItem[] = [
   {
@@ -86,50 +81,6 @@ export const offerTypeGuides: GuideItem[] = [
   },
 ];
 
-export const offerTypeFaqs: FaqItem[] = [
-  {
-    id: "faq-offer-stay-where",
-    offerType: "stay",
-    question: "숙소할인코드는 어느 사이트에서 쓰나요?",
-    answer:
-      "코드마다 쓸 수 있는 플랫폼이 정해져 있습니다. 아고다 코드는 아고다, 야놀자 코드는 야놀자 결제창에만 입력하세요. 이 페이지는 국내 또는 해외 숙소 코드만 모아 보여 주고, 각 카드에 어느 사이트 코드인지 적혀 있습니다.",
-  },
-  {
-    id: "faq-offer-stay-stack",
-    offerType: "stay",
-    question: "숙소 코드를 두 개 겹쳐 쓸 수 있나요?",
-    answer:
-      "같은 예약에 서로 다른 플랫폼 코드를 같이 넣을 수는 없습니다. 한 숙소를 여러 사이트에서 열어 본 뒤, 코드 적용가가 더 낮은 쪽으로 결제하면 됩니다. 특가·멤버십 할인과 코드가 겹치지 않는 경우도 있습니다.",
-  },
-  {
-    id: "faq-offer-tour-stay",
-    offerType: "tour",
-    question: "투어 할인코드를 호텔 예약에도 쓸 수 있나요?",
-    answer:
-      "대부분 안 됩니다. 투어·액티비티·입장권 전용 코드는 숙소 결제에서 거절됩니다. 숙소 코드는 국내 숙소·해외 숙소 할인코드 페이지에서 확인하세요.",
-  },
-  {
-    id: "faq-offer-tour-cart",
-    offerType: "tour",
-    question: "입장권이랑 투어를 한 장바구니에 넣어도 되나요?",
-    answer:
-      "사이트에 따라 코드가 일부 상품에만 붙을 수 있습니다. 적용 금액이 예상과 다르면 카테고리별로 나눠 결제해 보세요.",
-  },
-  {
-    id: "faq-offer-flight-where",
-    offerType: "flight",
-    question: "항공권 할인코드는 어디서 입력하나요?",
-    answer:
-      "항공 검색 화면이 아니라 승객 정보 입력 후 결제 직전 프로모션 코드 칸에 넣습니다. 앱 전용인지, 특정 항공사만 되는지도 코드 설명을 확인하세요.",
-  },
-  {
-    id: "faq-offer-package-only",
-    offerType: "package",
-    question: "패키지 쿠폰을 숙소나 항공만 살 때도 쓸 수 있나요?",
-    answer:
-      "항공+호텔을 묶은 패키지 결제에만 적용되는 코드가 많습니다. 숙소 단독·항공 단독은 국내·해외 숙소 또는 항공 할인코드 페이지의 코드를 쓰세요.",
-  },
-];
 
 function matchesOfferHub<T extends { offerType?: OfferType; category?: HubRegion }>(
   item: T,
@@ -147,5 +98,92 @@ export function getGuidesByOfferHub(hub: OfferTypeInfo): GuideItem[] {
 }
 
 export function getFaqsByOfferHub(hub: OfferTypeInfo): FaqItem[] {
-  return offerTypeFaqs.filter((faq) => matchesOfferHub(faq, hub));
+  const { year, month } = getFreshness();
+  const period = `${year}년 ${month}월`;
+  const { name, label, category, slug, type } = hub;
+  const stayNoun = category === "국내" ? "모텔·호텔·펜션" : "호텔";
+  const tourNoun = category === "국내" ? "제주·부산 액티비티" : "투어·입장권";
+
+  const byType: Record<OfferType, FaqItem[]> = {
+    stay: [
+      {
+        id: `faq-${slug}-where`,
+        question: `${period} ${label}는 어디서 받나요?`,
+        answer: `${period} ${label}는 코드세이아 ${name} 페이지에 모아 두었습니다. 아고다·호텔스닷컴·부킹닷컴·야놀자·여기어때처럼 사이트마다 코드가 다릅니다. 카드에 적힌 플랫폼 결제창에만 붙여넣으세요.`,
+      },
+      {
+        id: `faq-${slug}-input`,
+        question: `${category} ${stayNoun} 쿠폰은 어디에 입력하나요?`,
+        answer: `${name} 할인코드는 검색 결과가 아니라 결제 직전 쿠폰·프로모션 칸에 넣습니다. 시크릿가·핫딜·멤버 전용가는 코드가 거절되는 경우가 많아, 일반 요금+코드와 특가를 비교하세요.`,
+      },
+      {
+        id: `faq-${slug}-stack`,
+        question: `${label}를 두 플랫폼에서 같이 쓸 수 있나요?`,
+        answer: `한 예약에 서로 다른 사이트 코드를 동시에 넣을 수는 없습니다. 같은 ${category} 숙소를 여러 플랫폼에서 연 뒤, ${name} 할인코드 적용가가 더 낮은 쪽으로 결제하면 됩니다.`,
+      },
+      {
+        id: `faq-${slug}-deal`,
+        question: `${category} 숙소 특가에도 ${name} 할인코드가 되나요?`,
+        answer: `이미 깎인 시크릿딜·핫딜·타임세일은 ${label} 제외인 경우가 많습니다. 코드 적용 후 금액이 그대로면 일반 요금으로 바꿔 다시 넣어 보세요.`,
+      },
+    ],
+    tour: [
+      {
+        id: `faq-${slug}-where`,
+        question: `${period} ${label}는 어디서 확인하나요?`,
+        answer: `${period} ${label}는 코드세이아 ${name} 페이지에서 복사할 수 있습니다. 클룩·마이리얼트립·야놀자 레저처럼 사이트마다 코드가 다르고, ${tourNoun} 전용인 경우가 많습니다.`,
+      },
+      {
+        id: `faq-${slug}-stay`,
+        question: `${category} 투어 할인코드를 호텔 예약에도 쓸 수 있나요?`,
+        answer: `대부분 안 됩니다. ${name} 쿠폰은 투어·액티비티·입장권 결제에만 됩니다. 숙소 코드는 국내 숙소·해외 숙소 할인코드 페이지에서 따로 확인하세요.`,
+      },
+      {
+        id: `faq-${slug}-cart`,
+        question: `${category} 입장권이랑 투어를 한 장바구니에 넣어도 쿠폰이 되나요?`,
+        answer: `클룩·마이리얼트립은 카테고리가 다른 상품을 같이 담으면 ${name} 할인이 일부만 붙는 경우가 있습니다. 적용 금액이 예상과 다르면 상품을 나눠 결제하세요.`,
+      },
+      {
+        id: `faq-${slug}-region`,
+        question: `${label}는 어느 지역·상품에 되나요?`,
+        answer: `코드 설명에 적힌 국가·테마파크·유심만 대상인 경우가 많습니다. ${category === "해외" ? "일본 유니버설 코드는 유럽 투어나 유심에 거절될 수 있습니다." : "제주 액티비티 코드는 숙소나 다른 지역 레저에 거절될 수 있습니다."} 카드의 적용 조건을 먼저 보세요.`,
+      },
+    ],
+    flight: [
+      {
+        id: `faq-${slug}-where`,
+        question: `${period} ${label}는 어디에 입력하나요?`,
+        answer: `${label}는 항공 검색 화면이 아니라 승객 정보를 넣은 뒤 결제 직전 프로모션 칸에 넣습니다. ${period} 코드는 트립닷컴·익스피디아처럼 사이트마다 다르고, 앱 전용·특정 항공사만 되는 코드도 있습니다.`,
+      },
+      {
+        id: `faq-${slug}-hotel`,
+        question: `${category} 항공권 쿠폰을 호텔에도 쓸 수 있나요?`,
+        answer: `안 됩니다. ${name} 할인코드는 항공권 결제에만 됩니다. 숙소는 ${category} 숙소 할인코드 페이지의 코드를 쓰세요.`,
+      },
+      {
+        id: `faq-${slug}-fuel`,
+        question: `${label}와 유가 할인을 같이 쓸 수 있나요?`,
+        answer: `${category} 항공권은 유가 할인과 프로모션 코드가 동시에 안 되는 구간이 있습니다. 코드를 넣기 전후 최종 결제 금액을 비교하세요. 국내선만 되거나 특정 항공사만 되는지도 카드 설명을 확인합니다.`,
+      },
+    ],
+    package: [
+      {
+        id: `faq-${slug}-where`,
+        question: `${period} ${label}는 어디서 쓰나요?`,
+        answer: `${period} ${label}는 코드세이아 ${name} 페이지에 있습니다. 익스피디아·트립닷컴처럼 항공+호텔을 묶은 결제창에만 넣는 코드가 많습니다.`,
+      },
+      {
+        id: `faq-${slug}-only`,
+        question: `항공호텔 패키지 쿠폰을 숙소나 항공만 살 때도 쓸 수 있나요?`,
+        answer: `대부분 안 됩니다. ${name} 할인코드는 항공과 호텔을 함께 담은 패키지에만 됩니다. 숙소 단독·항공 단독은 숙소·항공 할인코드 페이지의 코드를 쓰세요.`,
+      },
+      {
+        id: `faq-${slug}-deal`,
+        question: `${category} 패키지 특가에도 ${name} 쿠폰이 되나요?`,
+        answer: `특가 운임·프로모션 객실은 ${label} 제외인 경우가 많습니다. 패키지 결제 화면에서 코드 적용 후 금액이 바뀌었는지 확인하고, 그대로면 일반 패키지 요금으로 다시 넣어 보세요.`,
+      },
+    ],
+  };
+
+  return byType[type];
 }

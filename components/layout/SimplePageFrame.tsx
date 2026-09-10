@@ -3,15 +3,17 @@
 import Link from "next/link";
 import { Compass } from "lucide-react";
 import { SiteFooter } from "@/components/layout/SiteFooter";
-import type { PlatformInfo } from "@/types/coupon";
+import type { OfferTypeInfo, PlatformInfo } from "@/types/coupon";
 
 interface SimplePageFrameProps {
   children: React.ReactNode;
+  listedOfferMenus?: OfferTypeInfo[];
   listedPlatforms?: PlatformInfo[];
 }
 
 export function SimplePageFrame({
   children,
+  listedOfferMenus = [],
   listedPlatforms = [],
 }: SimplePageFrameProps) {
   return (
@@ -32,7 +34,10 @@ export function SimplePageFrame({
       </header>
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         {children}
-        <SiteFooter listedPlatforms={listedPlatforms} />
+        <SiteFooter
+          listedOfferMenus={listedOfferMenus}
+          listedPlatforms={listedPlatforms}
+        />
       </div>
     </div>
   );

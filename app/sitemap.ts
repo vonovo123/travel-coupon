@@ -1,11 +1,13 @@
 import type { MetadataRoute } from "next";
-import { offerTypeHubs } from "@/data/offerTypes";
-import { getListedPlatforms } from "@/lib/content/catalog";
+import { getListedOfferMenus, getListedPlatforms } from "@/lib/content/catalog";
 import { siteUrl } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date();
-  const listedPlatforms = await getListedPlatforms();
+  const [listedPlatforms, listedOfferMenus] = await Promise.all([
+    getListedPlatforms(),
+    getListedOfferMenus(),
+  ]);
 
   return [
     {
@@ -20,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",
       priority: 0.3,
     },
-    ...offerTypeHubs.map((hub) => ({
+    ...listedOfferMenus.map((hub) => ({
       url: `${siteUrl}/${hub.slug}`,
       lastModified,
       changeFrequency: "daily" as const,

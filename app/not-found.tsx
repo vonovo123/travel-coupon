@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { SimplePageFrame } from "@/components/layout/SimplePageFrame";
-import { getListedPlatforms } from "@/lib/content/catalog";
+import { getListedOfferMenus, getListedPlatforms } from "@/lib/content/catalog";
 
 export const metadata = {
-  title: "페이지를 찾을 수 없습니다",
+  title: {
+    absolute: "코드세이아",
+  },
   robots: {
     index: false,
     follow: true,
@@ -11,10 +13,16 @@ export const metadata = {
 };
 
 export default async function NotFound() {
-  const listedPlatforms = await getListedPlatforms();
+  const [listedPlatforms, listedOfferMenus] = await Promise.all([
+    getListedPlatforms(),
+    getListedOfferMenus(),
+  ]);
 
   return (
-    <SimplePageFrame listedPlatforms={listedPlatforms}>
+    <SimplePageFrame
+      listedOfferMenus={listedOfferMenus}
+      listedPlatforms={listedPlatforms}
+    >
       <main>
         <p className="text-sm text-starlight-gold">404</p>
         <h1 className="mt-2 font-serif text-2xl font-semibold text-deep-navy sm:text-3xl">

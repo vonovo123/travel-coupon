@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SitePage } from "@/components/pages/SitePage";
-import { getOfferTypeBySlug, offerTypeHubs } from "@/data/offerTypes";
-import { getPlatformBySlug, getSanityPlatforms } from "@/lib/content/catalog";
+import {
+  getOfferMenuBySlug,
+  getPlatformBySlug,
+  getSanityOfferMenus,
+  getSanityPlatforms,
+} from "@/lib/content/catalog";
 import { offerTypeMetadata, platformMetadata } from "@/lib/seo";
 
 interface PlatformRouteProps {
@@ -14,10 +18,13 @@ interface PlatformRouteProps {
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const platforms = await getSanityPlatforms();
+  const [menus, platforms] = await Promise.all([
+    getSanityOfferMenus(),
+    getSanityPlatforms(),
+  ]);
 
   return [
-    ...offerTypeHubs.map((hub) => ({ platform: hub.slug })),
+    ...menus.map((hub) => ({ platform: hub.slug })),
     ...platforms.map((platform) => ({ platform: platform.slug })),
   ];
 }
@@ -27,7 +34,7 @@ export const dynamicParams = true;
 export async function generateMetadata({
   params,
 }: PlatformRouteProps): Promise<Metadata> {
-  const offerHub = getOfferTypeBySlug(params.platform);
+  const offerHub = await getOfferMenuBySlug(params.platform);
 
   if (offerHub) {
     return offerTypeMetadata(offerHub);
@@ -43,7 +50,7 @@ export async function generateMetadata({
 }
 
 export default async function PlatformPage({ params }: PlatformRouteProps) {
-  const offerHub = getOfferTypeBySlug(params.platform);
+  const offerHub = await getOfferMenuBySlug(params.platform);
 
   if (offerHub) {
     return <SitePage offerHubSlug={offerHub.slug} />;

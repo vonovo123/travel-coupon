@@ -16,10 +16,7 @@ export function generateMetadata(): Metadata {
   return {
     metadataBase: new URL(siteUrl),
     title: {
-      default:
-        typeof home.title === "object" && home.title && "absolute" in home.title
-          ? String(home.title.absolute)
-          : `${siteName} | 여행 할인코드의 종착지`,
+      default: siteName,
       template: `%s | ${siteName}`,
     },
     description: home.description,

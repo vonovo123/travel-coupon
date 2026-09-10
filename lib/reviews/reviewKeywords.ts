@@ -114,16 +114,14 @@ export function buildHomeMetadataFromReviews(reviews: ReviewPost[]): Metadata {
       ? `최근 항해일지: ${recentTitles.join(" · ")}`
       : "국내 숙소, 일본·해외 여행 내돈내산 후기";
 
-  const title = `${year}년 ${month}월 여행 후기·숙소 내돈내산 | 코드세이아 항해일지`;
+  const title = `${year}년 ${month}월 여행 후기·숙소 내돈내산`;
   const description = `${year}년 ${month}월 기준 코드세이아 항해일지. ${topicLine}`.slice(
     0,
     160,
   );
 
   return {
-    title: {
-      absolute: title,
-    },
+    title,
     description,
     keywords,
     robots: {
@@ -134,7 +132,7 @@ export function buildHomeMetadataFromReviews(reviews: ReviewPost[]): Metadata {
       canonical: "/",
     },
     openGraph: {
-      title,
+      title: `${title} | ${siteName}`,
       description,
       locale: "ko_KR",
       type: "website",
@@ -143,7 +141,7 @@ export function buildHomeMetadataFromReviews(reviews: ReviewPost[]): Metadata {
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: `${title} | ${siteName}`,
       description,
     },
   };

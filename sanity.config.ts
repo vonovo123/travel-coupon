@@ -3,6 +3,7 @@ import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { apiVersion, dataset, projectId } from "./sanity/env";
 import { schemaTypes } from "./sanity/schemaTypes";
+import { structure } from "./sanity/structure";
 
 export default defineConfig({
   name: "codeyssey",
@@ -11,18 +12,27 @@ export default defineConfig({
   dataset,
   plugins: [
     structureTool({
-      structure: (S) =>
-        S.list()
-          .id("content")
-          .title("콘텐츠")
-          .items([
-            S.documentTypeListItem("platform").id("platform").title("플랫폼"),
-            S.documentTypeListItem("coupon").id("coupon").title("할인코드"),
-          ]),
+      structure,
     }),
     visionTool({ defaultApiVersion: apiVersion }),
   ],
   schema: {
     types: schemaTypes,
+    templates: (previous) => [
+      ...previous,
+      {
+        id: "coupon-by-period",
+        title: "할인코드",
+        schemaType: "coupon",
+        parameters: [
+          { name: "year", type: "number" },
+          { name: "month", type: "number" },
+        ],
+        value: ({ year, month }: { year: number; month: number }) => ({
+          year,
+          month,
+        }),
+      },
+    ],
   },
 });

@@ -16,6 +16,8 @@ export interface OfferTypeInfo {
   label: string;
   searchKeyword: string;
   shortDescription: string;
+  /** false면 메뉴·사이트맵에서 숨기고 noindex. 직접 URL은 유지. */
+  listed: boolean;
 }
 
 export interface PlatformInfo {
@@ -36,6 +38,8 @@ export interface Coupon {
   logoUrl: string;
   offerType: OfferType;
   category: Category;
+  year?: number;
+  month?: number;
   title: string;
   description: string;
   code: string;

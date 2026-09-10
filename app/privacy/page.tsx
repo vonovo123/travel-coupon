@@ -1,15 +1,21 @@
 import type { Metadata } from "next";
 import { SimplePageFrame } from "@/components/layout/SimplePageFrame";
-import { getListedPlatforms } from "@/lib/content/catalog";
+import { getListedOfferMenus, getListedPlatforms } from "@/lib/content/catalog";
 import { buildPrivacyMetadata, siteName } from "@/lib/seo";
 
 export const metadata: Metadata = buildPrivacyMetadata();
 
 export default async function PrivacyPage() {
-  const listedPlatforms = await getListedPlatforms();
+  const [listedPlatforms, listedOfferMenus] = await Promise.all([
+    getListedPlatforms(),
+    getListedOfferMenus(),
+  ]);
 
   return (
-    <SimplePageFrame listedPlatforms={listedPlatforms}>
+    <SimplePageFrame
+      listedOfferMenus={listedOfferMenus}
+      listedPlatforms={listedPlatforms}
+    >
       <article className="max-w-2xl space-y-8 text-sm leading-relaxed text-deep-navy/75">
         <header>
           <h1 className="font-serif text-2xl font-semibold text-deep-navy sm:text-3xl">

@@ -17,6 +17,8 @@ interface BrandChromeProps {
     total: number;
     visible: number;
   };
+  /** 로딩 화면은 H1을 쓰지 않아 본문 제목과 겹치지 않게 한다. */
+  headingAs?: "h1" | "p";
 }
 
 const collapse =
@@ -30,13 +32,14 @@ export function BrandChrome({
   menuOpen = false,
   onMenuToggle,
   reviewProgress,
+  headingAs = "h1",
 }: BrandChromeProps) {
   const { year, month } = getFreshness();
   const pageTitle = offerHub
-    ? `${offerHub.label} ${month}월`
+    ? `${year}년 ${month}월 ${offerHub.label}`
     : platform
-      ? `${platform.name} 할인코드 ${month}월`
-      : `${year}년 코드세이아 여행 후기`;
+      ? `${year}년 ${month}월 ${platform.name} 할인코드`
+      : `${year}년 ${month}월 코드세이아 여행 후기`;
   const description = offerHub
     ? `${year}년 ${month}월 기준. ${offerHub.shortDescription}`
     : platform
@@ -97,15 +100,27 @@ export function BrandChrome({
             ) : null}
           </div>
 
-          <h1
-            className={
-              compact
-                ? "sr-only"
-                : "sr-only break-keep font-serif font-semibold text-white md:relative md:mt-3 md:h-auto md:w-auto md:overflow-visible md:whitespace-normal md:p-0 md:m-0 md:text-xl md:[clip:auto] lg:text-2xl"
-            }
-          >
-            {pageTitle}
-          </h1>
+          {headingAs === "h1" ? (
+            <h1
+              className={
+                compact
+                  ? "sr-only"
+                  : "sr-only break-keep font-serif font-semibold text-white md:relative md:mt-3 md:h-auto md:w-auto md:overflow-visible md:whitespace-normal md:p-0 md:m-0 md:text-xl md:[clip:auto] lg:text-2xl"
+              }
+            >
+              {pageTitle}
+            </h1>
+          ) : (
+            <p
+              className={
+                compact
+                  ? "sr-only"
+                  : "sr-only break-keep font-serif font-semibold text-white md:relative md:mt-3 md:h-auto md:w-auto md:overflow-visible md:whitespace-normal md:p-0 md:m-0 md:text-xl md:[clip:auto] lg:text-2xl"
+              }
+            >
+              {pageTitle}
+            </p>
+          )}
 
           {!compact ? (
             <p className="mt-1.5 hidden text-xs leading-relaxed text-white/75 md:block sm:text-sm">

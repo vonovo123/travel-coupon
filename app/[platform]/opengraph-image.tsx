@@ -1,5 +1,4 @@
-import { getOfferTypeBySlug } from "@/data/offerTypes";
-import { getPlatformBySlug } from "@/lib/content/catalog";
+import { getOfferMenuBySlug, getPlatformBySlug } from "@/lib/content/catalog";
 import { getFreshness } from "@/lib/seo";
 import { ogContentType, ogSize, renderOgImage } from "@/lib/og/renderOgImage";
 
@@ -14,7 +13,7 @@ interface PlatformOgProps {
 }
 
 export async function generateImageMetadata({ params }: PlatformOgProps) {
-  const offerHub = getOfferTypeBySlug(params.platform);
+  const offerHub = await getOfferMenuBySlug(params.platform);
   const platform = offerHub
     ? undefined
     : await getPlatformBySlug(params.platform);
@@ -33,7 +32,7 @@ export async function generateImageMetadata({ params }: PlatformOgProps) {
 }
 
 export default async function Image({ params }: PlatformOgProps) {
-  const offerHub = getOfferTypeBySlug(params.platform);
+  const offerHub = await getOfferMenuBySlug(params.platform);
   const { year, month } = getFreshness();
 
   if (offerHub) {

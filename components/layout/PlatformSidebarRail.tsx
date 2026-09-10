@@ -1,14 +1,16 @@
 import { PlatformSidebar } from "@/components/layout/PlatformSidebar";
-import type { PlatformInfo } from "@/types/coupon";
+import type { OfferTypeInfo, PlatformInfo } from "@/types/coupon";
 
 interface PlatformSidebarRailProps {
   currentSlug?: string;
+  listedOfferMenus?: OfferTypeInfo[];
   listedPlatforms: PlatformInfo[];
 }
 
 /** 데스크톱 사이드바: 스크롤에 고정하지 않음 (본문과 함께 흐름) */
 export function PlatformSidebarRail({
   currentSlug,
+  listedOfferMenus = [],
   listedPlatforms,
 }: PlatformSidebarRailProps) {
   return (
@@ -18,6 +20,7 @@ export function PlatformSidebarRail({
     >
       <PlatformSidebar
         currentSlug={currentSlug}
+        listedOfferMenus={listedOfferMenus}
         listedPlatforms={listedPlatforms}
         dense
       />

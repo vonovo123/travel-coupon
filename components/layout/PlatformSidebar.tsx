@@ -11,11 +11,11 @@ import {
   Star,
   Ticket,
 } from "lucide-react";
-import { offerTypeHubs } from "@/data/offerTypes";
-import type { OfferType, PlatformInfo } from "@/types/coupon";
+import type { OfferType, OfferTypeInfo, PlatformInfo } from "@/types/coupon";
 
 interface PlatformSidebarProps {
   currentSlug?: string;
+  listedOfferMenus: OfferTypeInfo[];
   listedPlatforms: PlatformInfo[];
   /** 모바일 드롭다운에서 항로 선택 시 메뉴 닫기 */
   onNavigate?: () => void;
@@ -46,6 +46,7 @@ const offerTypeIcons: Record<OfferType, typeof BedDouble> = {
 
 export function PlatformSidebar({
   currentSlug,
+  listedOfferMenus,
   listedPlatforms,
   onNavigate,
   dense = false,
@@ -104,7 +105,7 @@ export function PlatformSidebar({
       >
         상품별
       </p>
-      {offerTypeHubs.map((hub) => {
+      {listedOfferMenus.map((hub) => {
         const isActive = currentSlug === hub.slug;
         const Icon = offerTypeIcons[hub.type];
 

@@ -1,15 +1,21 @@
 import type { MetadataRoute } from "next";
-import { getUnlistedPlatforms } from "@/lib/content/catalog";
+import { getUnlistedOfferMenus, getUnlistedPlatforms } from "@/lib/content/catalog";
 import { siteUrl } from "@/lib/seo";
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
-  const unlistedPlatforms = await getUnlistedPlatforms();
+  const [unlistedPlatforms, unlistedMenus] = await Promise.all([
+    getUnlistedPlatforms(),
+    getUnlistedOfferMenus(),
+  ]);
 
   return {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: unlistedPlatforms.map((platform) => `/${platform.slug}`),
+      disallow: [
+        ...unlistedMenus.map((menu) => `/${menu.slug}`),
+        ...unlistedPlatforms.map((platform) => `/${platform.slug}`),
+      ],
     },
     sitemap: `${siteUrl}/sitemap.xml`,
   };

@@ -1,4 +1,5 @@
 import { absoluteUrl, organizationId, siteName, websiteId } from "@/lib/seo";
+import { questionFromCoupon } from "@/lib/searchQuestions";
 import type { Coupon, FaqItem, ReviewPost } from "@/types/coupon";
 
 export interface BreadcrumbItem {
@@ -93,7 +94,7 @@ export function JsonLd({
           position: index + 1,
           item: {
             "@type": "Offer",
-            name: coupon.title,
+            name: questionFromCoupon(coupon).question,
             description: coupon.description,
             category: coupon.platform,
             url: pageUrl,
@@ -106,10 +107,17 @@ export function JsonLd({
         })),
   };
 
+  const faqId = `${pageUrl}#faq`;
+  const uniqueFaqs = faqs.filter(
+    (faq, index, list) =>
+      list.findIndex((item) => item.question === faq.question) === index,
+  );
   const faqPage = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: faqs.map((faq) => ({
+    "@id": faqId,
+    url: pageUrl,
+    mainEntity: uniqueFaqs.map((faq) => ({
       "@type": "Question",
       name: faq.question,
       acceptedAnswer: {
@@ -117,6 +125,23 @@ export function JsonLd({
         text: faq.answer,
       },
     })),
+  };
+
+  const webPage = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": pageUrl,
+    url: pageUrl,
+    name,
+    description,
+    inLanguage: "ko-KR",
+    isPartOf: {
+      "@id": websiteId,
+    },
+    about: {
+      "@id": organizationId,
+    },
+    ...(uniqueFaqs.length > 0 ? { mainEntity: { "@id": faqId } } : {}),
   };
 
   const crumbItems =
@@ -147,6 +172,10 @@ export function JsonLd({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(website) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPage) }}
       />
       <script
         type="application/ld+json"

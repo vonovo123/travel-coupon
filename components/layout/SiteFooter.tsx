@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { offerTypeHubs, offerTypeNames } from "@/data/offerTypes";
-import type { OfferType, PlatformInfo } from "@/types/coupon";
+import { offerTypeNames } from "@/data/offerTypes";
+import type { OfferType, OfferTypeInfo, PlatformInfo } from "@/types/coupon";
 
 interface SiteFooterProps {
   usageHint?: string;
+  listedOfferMenus?: OfferTypeInfo[];
   listedPlatforms?: PlatformInfo[];
 }
 
@@ -14,6 +15,7 @@ const footerLinkClass =
 
 export function SiteFooter({
   usageHint,
+  listedOfferMenus = [],
   listedPlatforms = [],
 }: SiteFooterProps) {
   return (
@@ -33,7 +35,11 @@ export function SiteFooter({
           </p>
           <ul className="mt-3 space-y-2">
             {offerTypeOrder.map((type) => {
-              const hubs = offerTypeHubs.filter((hub) => hub.type === type);
+              const hubs = listedOfferMenus.filter((hub) => hub.type === type);
+
+              if (hubs.length === 0) {
+                return null;
+              }
 
               return (
                 <li

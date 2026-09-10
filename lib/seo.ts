@@ -23,23 +23,25 @@ export const defaultDescription =
   "할인 코드를 찾아 헤매는 여행자의 종착지, 코드세이아. 아고다·마이리얼트립·트립닷컴·호텔스닷컴·클룩·Nol·익스피디아·부킹닷컴·야놀자·여기어때·에어비앤비의 숨겨진 할인코드를 한곳에서 확인하세요.";
 
 export function getFreshness() {
-  const now = new Date();
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "numeric",
+  }).formatToParts(new Date());
 
   return {
-    year: now.getFullYear(),
-    month: now.getMonth() + 1,
+    year: Number(parts.find((part) => part.type === "year")?.value),
+    month: Number(parts.find((part) => part.type === "month")?.value),
   };
 }
 
 export function buildHomeMetadata(): Metadata {
   const { year, month } = getFreshness();
-  const title = `${year}년 ${month}월 여행 후기·숙소 내돈내산 | 코드세이아 항해일지`;
+  const title = `${year}년 ${month}월 여행 후기·숙소 내돈내산`;
   const description = `${year}년 ${month}월 기준. 국내 펜션·워터파크, 일본 오사카·시즈오카·후지산, 튀르키예·상하이·미국 서부 등 내돈내산 여행 후기와 숙소·투어 팁을 코드세이아 항해일지에서 확인하세요.`;
 
   return {
-    title: {
-      absolute: title,
-    },
+    title,
     description,
     keywords: [
       `${year}년 여행 후기`,
@@ -60,7 +62,7 @@ export function buildHomeMetadata(): Metadata {
       canonical: "/",
     },
     openGraph: {
-      title,
+      title: `${title} | ${siteName}`,
       description,
       locale: "ko_KR",
       type: "website",
@@ -69,7 +71,7 @@ export function buildHomeMetadata(): Metadata {
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: `${title} | ${siteName}`,
       description,
     },
   };
@@ -78,7 +80,7 @@ export function buildHomeMetadata(): Metadata {
 export function platformMetadata(platform: PlatformInfo): Metadata {
   const { year, month } = getFreshness();
   const title = `${year}년 ${month}월 ${platform.name} 할인코드`;
-  const description = `${year}년 ${month}월 기준 ${platform.name} 숙소·항공·투어 할인코드입니다. 코드세이아에서 복사한 뒤 결제창에 붙여넣으세요. ${defaultDescription}`;
+  const description = `${year}년 ${month}월 ${platform.name} 숙소·항공·투어 할인코드. 코드세이아에서 복사한 뒤 ${platform.name} 결제창에 붙여넣으세요.`;
   const path = `/${platform.slug}`;
   const shouldIndex = platform.listed;
 
@@ -117,8 +119,9 @@ export function platformMetadata(platform: PlatformInfo): Metadata {
 export function offerTypeMetadata(hub: OfferTypeInfo): Metadata {
   const { year, month } = getFreshness();
   const title = `${year}년 ${month}월 ${hub.label}`;
-  const description = `${year}년 ${month}월 기준 ${hub.shortDescription} ${defaultDescription}`;
+  const description = `${year}년 ${month}월 ${hub.label}. ${hub.shortDescription}`;
   const path = `/${hub.slug}`;
+  const shouldIndex = hub.listed;
 
   return {
     title,
@@ -131,11 +134,11 @@ export function offerTypeMetadata(hub: OfferTypeInfo): Metadata {
       "여행 할인코드",
     ],
     robots: {
-      index: true,
-      follow: true,
+      index: shouldIndex,
+      follow: shouldIndex,
     },
     alternates: {
-      canonical: path,
+      canonical: shouldIndex ? path : undefined,
     },
     openGraph: {
       title: `${title} | ${siteName}`,

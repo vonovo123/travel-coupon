@@ -41,10 +41,15 @@ async function seed() {
       throw new Error(`Unknown platform: ${coupon.platform}`);
     }
 
+    const validUntil = toIsoDate(coupon.validUntil);
+    const now = new Date();
+
     transaction.createOrReplace({
       _id: `coupon-${coupon.id}`,
       _type: "coupon",
       title: coupon.title,
+      year: now.getFullYear(),
+      month: now.getMonth() + 1,
       platform: {
         _type: "reference",
         _ref: platformDocumentId(platform.slug),
@@ -53,7 +58,7 @@ async function seed() {
       category: coupon.category,
       code: coupon.code,
       description: coupon.description,
-      validUntil: toIsoDate(coupon.validUntil),
+      validUntil,
     });
   }
 

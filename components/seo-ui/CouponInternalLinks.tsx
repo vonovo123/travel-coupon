@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { offerTypeHubs } from "@/data/offerTypes";
 import type { Coupon, OfferTypeInfo, PlatformInfo } from "@/types/coupon";
 
 interface CouponInternalLinksProps {
   variant: "home" | "hub" | "platform";
+  listedOfferMenus?: OfferTypeInfo[];
   listedPlatforms: PlatformInfo[];
   offerHub?: OfferTypeInfo;
   platform?: PlatformInfo;
@@ -23,9 +23,9 @@ function LinkGroup({
 
   return (
     <div>
-      <h2 className="font-serif text-sm font-semibold text-deep-navy/70">
+      <p className="font-serif text-sm font-semibold text-deep-navy/70">
         {title}
-      </h2>
+      </p>
       <ul className="mt-2 flex flex-wrap gap-2">
         {items.map((item) => (
           <li key={item.href}>
@@ -44,6 +44,7 @@ function LinkGroup({
 
 export function CouponInternalLinks({
   variant,
+  listedOfferMenus = [],
   listedPlatforms,
   offerHub,
   platform,
@@ -54,7 +55,7 @@ export function CouponInternalLinks({
       <nav aria-label="할인코드 바로가기" className="mt-6 space-y-4">
         <LinkGroup
           title="상품별 할인코드"
-          items={offerTypeHubs.map((hub) => ({
+          items={listedOfferMenus.map((hub) => ({
             href: `/${hub.slug}`,
             label: hub.label,
           }))}
@@ -74,7 +75,7 @@ export function CouponInternalLinks({
     const relatedPlatforms = listedPlatforms.filter((item) =>
       coupons.some((coupon) => coupon.platform === item.name),
     );
-    const siblingHubs = offerTypeHubs.filter(
+    const siblingHubs = listedOfferMenus.filter(
       (hub) => hub.type === offerHub.type && hub.slug !== offerHub.slug,
     );
 
@@ -99,7 +100,7 @@ export function CouponInternalLinks({
   }
 
   if (variant === "platform" && platform) {
-    const relatedHubs = offerTypeHubs.filter((hub) =>
+    const relatedHubs = listedOfferMenus.filter((hub) =>
       coupons.some(
         (coupon) =>
           coupon.offerType === hub.type &&

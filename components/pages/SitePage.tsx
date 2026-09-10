@@ -15,17 +15,17 @@ import {
   getPaymentTipsByPlatformName,
   getReviews,
 } from "@/data/mockData";
-import {
-  getFaqsByOfferHub,
-  getGuidesByOfferHub,
-  getOfferTypeBySlug,
-} from "@/data/offerTypes";
+import { getFaqsByOfferHub, getGuidesByOfferHub } from "@/data/offerTypes";
 import {
   getCouponsByOfferHub,
   getCouponsByPlatformSlug,
+  getListedOfferMenus,
   getListedPlatforms,
+  getOfferMenuBySlug,
   getPlatformBySlug,
 } from "@/lib/content/catalog";
+import { getFreshness } from "@/lib/seo";
+import { questionFromCoupon } from "@/lib/searchQuestions";
 import type { ReviewPost } from "@/types/coupon";
 
 interface SitePageProps {
@@ -40,11 +40,16 @@ export async function SitePage({
   offerHubSlug,
   reviews: reviewsProp,
 }: SitePageProps) {
-  const listedPlatforms = await getListedPlatforms();
+  const [listedPlatforms, listedOfferMenus] = await Promise.all([
+    getListedPlatforms(),
+    getListedOfferMenus(),
+  ]);
   const platform = platformSlug
     ? await getPlatformBySlug(platformSlug)
     : undefined;
-  const offerHub = offerHubSlug ? getOfferTypeBySlug(offerHubSlug) : undefined;
+  const offerHub = offerHubSlug
+    ? await getOfferMenuBySlug(offerHubSlug)
+    : undefined;
   const isHome = !platform && !offerHub;
   const coupons = offerHub
     ? await getCouponsByOfferHub(offerHub)
@@ -71,21 +76,36 @@ export async function SitePage({
       : platform
         ? getFaqsByPlatformName(platform.name)
         : [];
+  const { year, month } = getFreshness();
   const jsonLdName = offerHub
-    ? `코드세이아 · ${offerHub.label}`
+    ? `${year}년 ${month}월 ${offerHub.label}`
     : platform
-      ? `코드세이아 · ${platform.name} 할인코드`
-      : "코드세이아 · 여행 후기";
+      ? `${year}년 ${month}월 ${platform.name} 할인코드`
+      : `${year}년 ${month}월 코드세이아 여행 후기`;
   const jsonLdDescription = offerHub
     ? offerHub.shortDescription
     : platform
-      ? `코드세이아에서 찾은 ${platform.name} 할인코드`
+      ? `${year}년 ${month}월 ${platform.name} 숙소·투어·항공 할인코드를 코드세이아에서 확인하고 결제창에 붙여넣으세요.`
       : "코드세이아 항해일지에 남긴 여행 후기";
+  const pageLead = offerHub
+    ? `${year}년 ${month}월 ${offerHub.label}입니다. ${offerHub.shortDescription}`
+    : platform
+      ? `${year}년 ${month}월 ${platform.name} 숙소·투어·항공 할인코드입니다. 코드를 복사한 뒤 ${platform.name} 결제창에 붙여넣으세요.`
+      : "";
   const currentSlug = offerHub?.slug ?? platformSlug;
   const path = currentSlug ? `/${currentSlug}` : "/";
   const listHeading = offerHub
     ? `${offerHub.label} ${coupons.length}개`
     : `${platform?.name} 할인코드 ${coupons.length}개`;
+  const couponFaqs = coupons.map((coupon) => {
+    const item = questionFromCoupon(coupon);
+    return {
+      id: `coupon-faq-${coupon.id}`,
+      question: item.question,
+      answer: item.answer,
+    };
+  });
+  const structuredFaqs = [...couponFaqs, ...pageFaqs];
   const breadcrumbs = [
     { name: "여행 후기", path: "/" },
     ...(offerHub
@@ -101,6 +121,7 @@ export async function SitePage({
         currentSlug={currentSlug}
         platform={platform}
         offerHub={offerHub}
+        listedOfferMenus={listedOfferMenus}
         listedPlatforms={listedPlatforms}
       />
 
@@ -112,37 +133,40 @@ export async function SitePage({
                 <ReviewInfiniteList reviews={reviews} />
                 <CouponInternalLinks
                   variant="home"
+                  listedOfferMenus={listedOfferMenus}
                   listedPlatforms={listedPlatforms}
                 />
               </>
             ) : (
               <>
-                <h2 className="mb-2 font-serif text-sm font-semibold text-deep-navy/70">
+                <p className="mb-3 text-sm leading-relaxed text-deep-navy/70">
+                  {pageLead}
+                </p>
+                <p className="mb-2 font-serif text-sm font-semibold text-deep-navy/70">
                   {listHeading}
-                </h2>
+                </p>
                 <CouponList coupons={coupons} />
+                <SeoContentSection
+                  guides={guides}
+                  paymentTips={pagePaymentTips}
+                  faqs={pageFaqs}
+                  activePlatform={platform?.name}
+                  sectionLabel={offerHub?.label}
+                />
                 <CouponInternalLinks
                   variant={offerHub ? "hub" : "platform"}
                   offerHub={offerHub}
                   platform={platform}
                   coupons={coupons}
+                  listedOfferMenus={listedOfferMenus}
                   listedPlatforms={listedPlatforms}
                 />
               </>
             )}
           </main>
-          {isHome ? (
-            <ReviewSeoSection reviews={reviews} />
-          ) : (
-            <SeoContentSection
-              guides={guides}
-              paymentTips={pagePaymentTips}
-              faqs={pageFaqs}
-              activePlatform={platform?.name}
-              sectionLabel={offerHub?.label}
-            />
-          )}
+          {isHome ? <ReviewSeoSection reviews={reviews} /> : null}
           <SiteFooter
+            listedOfferMenus={listedOfferMenus}
             listedPlatforms={listedPlatforms}
             usageHint={
               isHome
@@ -153,6 +177,7 @@ export async function SitePage({
         </div>
         <PlatformSidebarRail
           currentSlug={currentSlug}
+          listedOfferMenus={listedOfferMenus}
           listedPlatforms={listedPlatforms}
         />
       </div>
@@ -167,7 +192,7 @@ export async function SitePage({
         path={path}
         coupons={isHome ? [] : coupons}
         reviews={reviews}
-        faqs={pageFaqs}
+        faqs={isHome ? pageFaqs : structuredFaqs}
         breadcrumbs={breadcrumbs}
       />
       {isHome ? (

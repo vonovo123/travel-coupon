@@ -12,6 +12,28 @@ export const couponType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "year",
+      title: "연도",
+      type: "number",
+      description: "이 코드가 속하는 달력 연도. Studio에서 연도/월로 나뉩니다.",
+      initialValue: () => new Date().getFullYear(),
+      validation: (rule) => rule.required().integer().min(2020).max(2100),
+    }),
+    defineField({
+      name: "month",
+      title: "월",
+      type: "number",
+      description: "1–12. 유효 기간과 별개로, 사이트에 묶는 달입니다.",
+      options: {
+        list: Array.from({ length: 12 }, (_, index) => ({
+          title: `${index + 1}월`,
+          value: index + 1,
+        })),
+      },
+      initialValue: () => new Date().getMonth() + 1,
+      validation: (rule) => rule.required().integer().min(1).max(12),
+    }),
+    defineField({
       name: "platform",
       title: "플랫폼",
       type: "reference",
@@ -79,11 +101,16 @@ export const couponType = defineType({
       title: "title",
       code: "code",
       platform: "platform.name",
+      year: "year",
+      month: "month",
     },
-    prepare({ title, code, platform }) {
+    prepare({ title, code, platform, year, month }) {
+      const period =
+        year && month ? `${year}년 ${month}월` : "연도/월 미지정";
+
       return {
         title,
-        subtitle: [platform, code].filter(Boolean).join(" · "),
+        subtitle: [period, platform, code].filter(Boolean).join(" · "),
       };
     },
   },

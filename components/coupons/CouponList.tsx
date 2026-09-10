@@ -1,6 +1,4 @@
 import { CouponCard } from "@/components/coupons/CouponCard";
-import { DirectQuestion } from "@/components/seo-ui/DirectQuestion";
-import { questionFromCoupon } from "@/lib/searchQuestions";
 import type { Coupon } from "@/types/coupon";
 
 interface CouponListProps {
@@ -19,10 +17,7 @@ export function CouponList({ coupons }: CouponListProps) {
   return (
     <section aria-label="할인 코드 목록" className="flex flex-col gap-3">
       {coupons.map((coupon) => (
-        <div key={coupon.id} className="flex flex-col gap-3">
-          <CouponCard coupon={coupon} />
-          <DirectQuestion item={questionFromCoupon(coupon)} />
-        </div>
+        <CouponCard key={coupon.id} coupon={coupon} />
       ))}
     </section>
   );
