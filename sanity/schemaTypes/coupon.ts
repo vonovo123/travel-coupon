@@ -75,7 +75,6 @@ export const couponType = defineType({
       type: "string",
       description:
         "비우면 카드에 「쿠폰 받기」만 나갑니다. 있으면 「코드 복사」가 나갑니다.",
-      validation: (rule) => rule.optional(),
     }),
     defineField({
       name: "description",
