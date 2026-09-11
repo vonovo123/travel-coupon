@@ -7,6 +7,30 @@ const nextConfig = {
         destination: "/nol",
         permanent: true,
       },
+      {
+        source: "/",
+        has: [{ type: "host", value: "codysseia.net" }],
+        destination: "https://www.codysseia.net/",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "codysseia.net" }],
+        destination: "https://www.codysseia.net/:path*",
+        permanent: true,
+      },
+      {
+        source: "/",
+        has: [{ type: "host", value: "travel-coupon.vercel.app" }],
+        destination: "https://www.codysseia.net/",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "travel-coupon.vercel.app" }],
+        destination: "https://www.codysseia.net/:path*",
+        permanent: true,
+      },
     ];
   },
   images: {

@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import type { OfferTypeInfo, PlatformInfo } from "@/types/coupon";
 
 export const siteName = "코드세이아";
-export const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+export const siteUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://www.codysseia.net"
+    : "http://localhost:3000")
+).replace(/\/$/, "");
 
 export const organizationId = `${siteUrl.replace(/\/$/, "")}/#organization`;
 export const websiteId = `${siteUrl.replace(/\/$/, "")}/#website`;

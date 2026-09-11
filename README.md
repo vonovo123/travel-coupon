@@ -15,7 +15,7 @@ npm run build && npm start
 
 ## 2026-09-09 진행 상태
 
-라이브: https://travel-coupon.vercel.app  
+라이브: https://www.codysseia.net  
 Studio: https://codeyssey.sanity.studio/  
 Sanity 프로젝트 ID: `4gajz7je` / dataset `production`
 
@@ -64,10 +64,10 @@ Sanity 프로젝트 ID: `4gajz7je` / dataset `production`
 
 ### 다음에 할 일
 
-1. ~~Vercel 배포 + Sanity 연동~~ → https://travel-coupon.vercel.app
+1. ~~Vercel 배포 + Sanity 연동~~ → https://www.codysseia.net
 2. Studio에서 실제 제휴 링크·쿠폰 코드·유효기간 교체 (`sanity:seed` 재실행 금지)
 3. 가이드/FAQ Sanity화
-4. 자체 도메인(브랜드명 권장) + `NEXT_PUBLIC_SITE_URL` 갱신 + `vercel.app` 301
+4. ~~자체 도메인 + `NEXT_PUBLIC_SITE_URL` 갱신 + `vercel.app` 301~~ → https://www.codysseia.net
 5. Search Console / 네이버 서치어드바이저 등록
 6. 아래 **다음 기능 (SEO·UX)** 2순위부터 구현
 
@@ -129,7 +129,7 @@ Sanity 프로젝트 ID: `4gajz7je` / dataset `production`
 
 | 변수 | 설명 |
 |---|---|
-| `NEXT_PUBLIC_SITE_URL` | canonical/OG 기준 URL (배포 시 **필수**, 예: `https://xxx.vercel.app`) |
+| `NEXT_PUBLIC_SITE_URL` | canonical/OG 기준 URL (배포 시 **필수**, `https://www.codysseia.net`) |
 | `NAVER_BLOG_ID` | 네이버 블로그 ID (기본 `dlthdus12345`) |
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | Sanity 프로젝트 ID ([manage](https://www.sanity.io/manage)). **배포 시 필수** |
 | `NEXT_PUBLIC_SANITY_DATASET` | 데이터셋 (기본 `production`) |
@@ -167,11 +167,11 @@ cp .env.example .env.local
 
 ## Vercel 배포
 
-라이브: https://travel-coupon.vercel.app  
+라이브: https://www.codysseia.net  
 대시보드: https://vercel.com/921014/travel-coupon  
 GitHub `main` 푸시 시 자동 배포.
 
-Vercel에는 `NEXT_PUBLIC_SITE_URL`과 Sanity `NEXT_PUBLIC_*` 세 값이 들어가 있다. 커스텀 도메인을 붙이면 `NEXT_PUBLIC_SITE_URL`을 새 주소로 바꾸고 재배포한다.
+Vercel에는 `NEXT_PUBLIC_SITE_URL=https://www.codysseia.net`과 Sanity `NEXT_PUBLIC_*` 세 값이 들어가 있다. 도메인을 바꾸면 `NEXT_PUBLIC_SITE_URL`을 맞춘 뒤 재배포한다.
 
 Next.js 기본 설정으로 배포 가능 (`vercel.json`에 framework 지정).
 
@@ -181,7 +181,7 @@ Next.js 기본 설정으로 배포 가능 (`vercel.json`에 framework 지정).
 2. [vercel.com](https://vercel.com) → Add New Project → 저장소 Import
 3. Framework Preset: **Next.js** (자동 감지)
 4. Environment Variables:
-   - `NEXT_PUBLIC_SITE_URL` = `https://<프로젝트>.vercel.app` (커스텀 도메인 쓰면 그 URL)
+   - `NEXT_PUBLIC_SITE_URL` = `https://www.codysseia.net`
    - `NEXT_PUBLIC_SANITY_PROJECT_ID` / `NEXT_PUBLIC_SANITY_DATASET`
    - (선택) `NAVER_BLOG_ID`
 5. Deploy
