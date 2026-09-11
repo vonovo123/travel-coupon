@@ -36,7 +36,7 @@ const offerTypes: Exclude<OfferType, "common">[] = [
 ];
 
 function buildOfferHub(
-  type: OfferType,
+  type: Exclude<OfferType, "common">,
   region: (typeof hubRegions)[number],
 ): OfferTypeInfo {
   const productName = offerTypeNames[type];

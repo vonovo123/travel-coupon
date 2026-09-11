@@ -3,7 +3,7 @@ import { descriptionLines } from "@/lib/descriptionLines";
 import { getFreshness } from "@/lib/seo";
 import type { Coupon, OfferType } from "@/types/coupon";
 
-export const offerTypeOrder: OfferType[] = [
+export const offerTypeOrder: Exclude<OfferType, "common">[] = [
   "stay",
   "tour",
   "flight",
