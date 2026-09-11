@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { getFreshness } from "@/lib/seo";
+import { SANITY_CACHE_TAG } from "@/lib/content/sanityCache";
 import { sanityClient } from "@/sanity/lib/client";
 import {
   couponsQuery,
@@ -241,6 +242,7 @@ function mapCoupon(doc: SanityCoupon): Coupon | null {
 
 const fetchOptions = {
   next: {
+    tags: [SANITY_CACHE_TAG],
     revalidate: process.env.NODE_ENV === "development" ? 0 : 3600,
   },
 };

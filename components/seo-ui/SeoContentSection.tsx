@@ -52,7 +52,7 @@ export function SeoContentSection({
                 <h3 className="break-keep font-sans text-base font-semibold leading-snug text-deep-navy">
                   {faq.question}
                 </h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-deep-navy/75">
+                <p className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-deep-navy/75">
                   {faq.answer}
                 </p>
               </article>

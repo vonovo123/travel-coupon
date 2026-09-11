@@ -17,6 +17,22 @@ interface JsonLdProps {
   dateModified?: string;
 }
 
+function couponListDescription(coupon: Coupon): string {
+  const condition = coupon.description.replace(/\s*\n\s*/g, " · ").trim();
+  const until =
+    !coupon.validUntil || coupon.validUntil === "기간 확인"
+      ? "기간 한정"
+      : coupon.validUntil;
+
+  return [
+    condition,
+    coupon.code ? `코드: ${coupon.code}` : undefined,
+    `만료: ${until}`,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+}
+
 function toIsoDate(value: string): string | undefined {
   const matched = value.match(/(\d{4})[.\-/](\d{1,2})[.\-/](\d{1,2})/);
 
@@ -90,23 +106,31 @@ export function JsonLd({
             },
           },
         }))
-      : coupons.map((coupon, index) => ({
-          "@type": "ListItem",
-          position: index + 1,
-          item: {
-            "@type": "Offer",
+      : coupons.map((coupon, index) => {
+          const offerUrl = coupon.affiliateLink || pageUrl;
+          const offerDescription = couponListDescription(coupon);
+
+          return {
+            "@type": "ListItem",
+            position: index + 1,
             name: coupon.title,
-            description: coupon.description,
-            category: coupon.platform,
-            url: pageUrl,
-            ...(coupon.imageUrl ? { image: coupon.imageUrl } : {}),
-            availabilityEnds: toIsoDate(coupon.validUntil),
-            seller: {
-              "@type": "Organization",
-              name: coupon.platform,
+            description: offerDescription,
+            url: offerUrl,
+            item: {
+              "@type": "Offer",
+              name: coupon.title,
+              description: offerDescription,
+              category: coupon.platform,
+              url: offerUrl,
+              ...(coupon.imageUrl ? { image: coupon.imageUrl } : {}),
+              availabilityEnds: toIsoDate(coupon.validUntil),
+              seller: {
+                "@type": "Organization",
+                name: coupon.platform,
+              },
             },
-          },
-        })),
+          };
+        }),
   };
 
   const faqId = `${pageUrl}#faq`;

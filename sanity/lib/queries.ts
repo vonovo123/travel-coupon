@@ -23,7 +23,7 @@ export const offerMenusQuery = groq`*[_type == "offerMenu" && defined(slug.curre
   listed
 }`;
 
-export const couponsQuery = groq`*[_type == "coupon" && defined(platform)] | order(year desc, month desc, title asc) {
+export const couponsQuery = groq`*[_type == "coupon" && defined(platform)] | order(year desc, month desc, sortOrder asc, title asc) {
   _id,
   title,
   year,

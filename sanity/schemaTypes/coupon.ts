@@ -34,6 +34,12 @@ export const couponType = defineType({
       validation: (rule) => rule.required().integer().min(1).max(12),
     }),
     defineField({
+      name: "sortOrder",
+      title: "정렬",
+      type: "number",
+      description: "같은 연·월 안에서 작은 숫자가 위에 옵니다.",
+    }),
+    defineField({
       name: "platform",
       title: "플랫폼",
       type: "reference",

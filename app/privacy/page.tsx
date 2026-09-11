@@ -3,6 +3,8 @@ import { SimplePageFrame } from "@/components/layout/SimplePageFrame";
 import { getListedOfferMenus, getListedPlatforms } from "@/lib/content/catalog";
 import { buildPrivacyMetadata, siteName } from "@/lib/seo";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = buildPrivacyMetadata();
 
 export default async function PrivacyPage() {

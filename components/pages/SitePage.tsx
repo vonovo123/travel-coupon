@@ -28,7 +28,6 @@ import {
 import { formatSeoulUpdatedAt, getFreshness } from "@/lib/seo";
 import {
   discountImageAlt,
-  discountPageDescription,
   discountPageLead,
   hubPageDescription,
   hubPageTitle,
@@ -96,11 +95,13 @@ export async function SitePage({
     : platform
       ? platformPageTitle(platform.name, coupons)
       : `${year}년 ${month}월 코드세이아 여행 후기`;
-  const jsonLdName = pageTitle;
+  const jsonLdName = platform
+    ? `${year}년 ${month}월 ${platform.name} 할인코드 쿠폰 리스트`
+    : pageTitle;
   const jsonLdDescription = offerHub
     ? hubPageDescription(offerHub.label, offerHub.shortDescription, coupons)
     : platform
-      ? discountPageDescription(platform.name, coupons, platformApplyHint)
+      ? `${year}년 ${month}월 ${platform.name} 할인코드 및 프로모션 쿠폰 목록`
       : "코드세이아 항해일지에 남긴 여행 후기";
   const pageLead = offerHub
     ? `${hubPageTitle(offerHub.label)}입니다. ${offerHub.shortDescription}`

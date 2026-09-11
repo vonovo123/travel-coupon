@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { getListedOfferMenus, getListedPlatforms } from "@/lib/content/catalog";
 import { siteUrl } from "@/lib/seo";
 
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date();
   const [listedPlatforms, listedOfferMenus] = await Promise.all([
