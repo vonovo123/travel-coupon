@@ -23,7 +23,7 @@ function LinkGroup({
 
   return (
     <div>
-      <p className="font-serif text-sm font-semibold text-deep-navy/70">
+      <p className="font-sans text-sm font-semibold text-deep-navy/70">
         {title}
       </p>
       <ul className="mt-2 flex flex-wrap gap-2">

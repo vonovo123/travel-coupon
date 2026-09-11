@@ -10,7 +10,7 @@ export const offerTypeOrder: OfferType[] = [
   "package",
 ];
 
-const sectionLabels: Record<OfferType, string> = {
+const sectionLabels: Record<Exclude<OfferType, "common">, string> = {
   stay: "숙소 할인코드",
   tour: "투어·티켓 할인코드",
   flight: "항공권 할인코드",
@@ -43,11 +43,15 @@ export function couponTypePhrase(coupons: Coupon[]): string {
 }
 
 export function couponSectionHeading(
-  type: OfferType,
+  type: Exclude<OfferType, "common">,
   platformName?: string,
 ): string {
   const label = sectionLabels[type];
   return platformName ? `${platformName} ${label}` : label;
+}
+
+export function commonCoupons(coupons: Coupon[]) {
+  return coupons.filter((coupon) => coupon.offerType === "common");
 }
 
 export function groupCouponsByOfferType(coupons: Coupon[]) {

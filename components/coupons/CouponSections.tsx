@@ -1,5 +1,6 @@
 import { CouponCard } from "@/components/coupons/CouponCard";
 import {
+  commonCoupons,
   couponSectionHeading,
   groupCouponsByOfferType,
 } from "@/lib/discountPageCopy";
@@ -24,26 +25,44 @@ export function CouponSections({
     );
   }
 
+  const pinned = commonCoupons(coupons);
+  const rest = coupons.filter((coupon) => coupon.offerType !== "common");
+
+  const pinnedCards = pinned.map((coupon) => (
+    <CouponCard key={coupon.id} coupon={coupon} headingAs="h3" />
+  ));
+
   if (hubLabel) {
     return (
-      <section aria-labelledby="coupon-hub-heading" className="flex flex-col gap-3">
-        <h2
-          id="coupon-hub-heading"
-          className="font-serif text-sm font-semibold text-deep-navy/70"
-        >
-          이번 달 {hubLabel}
-        </h2>
-        {coupons.map((coupon) => (
-          <CouponCard key={coupon.id} coupon={coupon} headingAs="h3" />
-        ))}
-      </section>
+      <div className="flex flex-col gap-3">
+        {pinnedCards}
+        {rest.length > 0 ? (
+          <section
+            aria-labelledby="coupon-hub-heading"
+            className="flex flex-col gap-3"
+          >
+            <h2
+              id="coupon-hub-heading"
+              className="font-sans text-sm font-semibold text-deep-navy/70"
+            >
+              이번 달 {hubLabel}
+            </h2>
+            {rest.map((coupon) => (
+              <CouponCard key={coupon.id} coupon={coupon} headingAs="h3" />
+            ))}
+          </section>
+        ) : null}
+      </div>
     );
   }
 
-  const groups = groupCouponsByOfferType(coupons);
+  const groups = groupCouponsByOfferType(rest);
 
   return (
     <div className="flex flex-col gap-8">
+      {pinned.length > 0 ? (
+        <div className="flex flex-col gap-3">{pinnedCards}</div>
+      ) : null}
       {groups.map((group) => {
         const headingId = `coupon-${group.type}-heading`;
         const heading = couponSectionHeading(group.type, platformName);
@@ -56,7 +75,7 @@ export function CouponSections({
           >
             <h2
               id={headingId}
-              className="font-serif text-sm font-semibold text-deep-navy/70"
+              className="font-sans text-sm font-semibold text-deep-navy/70"
             >
               {heading}
             </h2>

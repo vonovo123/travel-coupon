@@ -15,7 +15,7 @@ export function ReviewSeoSection({ reviews }: ReviewSeoSectionProps) {
   return (
     <SeoDisclosure summary="후기 안내 · 제목 모음 · 가이드 · FAQ">
       <section>
-        <h2 className="font-serif text-sm font-semibold text-deep-navy/80">
+        <h2 className="font-sans text-sm font-semibold text-deep-navy/80">
           최신 여행 후기 제목
         </h2>
         <ol className="mt-2 list-decimal space-y-1 pl-4 text-[13px] leading-snug text-deep-navy/70">
@@ -35,7 +35,7 @@ export function ReviewSeoSection({ reviews }: ReviewSeoSectionProps) {
       </section>
 
       <section>
-        <h2 className="font-serif text-sm font-semibold text-deep-navy/80">
+        <h2 className="font-sans text-sm font-semibold text-deep-navy/80">
           후기 읽는 가이드
         </h2>
         <div className="mt-1">
@@ -48,7 +48,7 @@ export function ReviewSeoSection({ reviews }: ReviewSeoSectionProps) {
       </section>
 
       <section>
-        <h2 className="font-serif text-sm font-semibold text-deep-navy/80">
+        <h2 className="font-sans text-sm font-semibold text-deep-navy/80">
           자주 묻는 질문
         </h2>
         <div className="mt-1">

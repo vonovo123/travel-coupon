@@ -33,7 +33,7 @@ export function ReviewCard({ review, priority = false }: ReviewCardProps) {
       </div>
       <div className="flex min-w-0 flex-1 flex-col justify-center gap-2 px-4 py-3 sm:py-4">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="font-serif text-[15px] font-semibold leading-snug text-deep-navy group-hover:text-deep-navy-muted sm:text-base">
+          <h3 className="font-sans text-[15px] font-semibold leading-snug text-deep-navy group-hover:text-deep-navy-muted sm:text-base">
             {review.title}
           </h3>
           <ExternalLink

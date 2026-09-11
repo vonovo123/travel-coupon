@@ -772,7 +772,7 @@ export function getCouponsByPlatform(slug?: string): Coupon[] {
 export function getCouponsByOfferHub(hub: OfferTypeInfo): Coupon[] {
   return coupons.filter(
     (coupon) =>
-      coupon.offerType === hub.type &&
+      (coupon.offerType === hub.type || coupon.offerType === "common") &&
       (coupon.category === hub.category || coupon.category === "공통"),
   );
 }

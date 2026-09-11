@@ -46,6 +46,7 @@ export const couponType = defineType({
       type: "string",
       options: {
         list: [
+          { title: "공통", value: "common" },
           { title: "숙소", value: "stay" },
           { title: "투어", value: "tour" },
           { title: "항공", value: "flight" },

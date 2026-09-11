@@ -17,7 +17,7 @@ import type {
 
 const reservedPageSlugs = new Set(["privacy"]);
 
-const offerTypes: OfferType[] = ["stay", "tour", "flight", "package"];
+const offerTypes: OfferType[] = ["stay", "tour", "flight", "package", "common"];
 const categories: Category[] = ["국내", "해외", "공통"];
 
 interface SanityPlatform {
@@ -28,6 +28,8 @@ interface SanityPlatform {
   color?: string;
   listed?: boolean;
   imageUrl?: string;
+  bannerUrl?: string;
+  bannerText?: string;
 }
 
 interface SanityOfferMenu {
@@ -155,7 +157,8 @@ function mapPlatform(
   }
 
   const imageUrl = firstText(doc.imageUrl, previewImageUrl("platform", doc.slug));
-  const bannerUrl = previewImageUrl("banner", doc.slug);
+  const bannerUrl = firstText(doc.bannerUrl, previewImageUrl("banner", doc.slug));
+  const bannerText = firstText(doc.bannerText);
 
   return {
     name: doc.name,
@@ -167,6 +170,7 @@ function mapPlatform(
     listed: doc.listed !== false,
     ...(imageUrl ? { imageUrl } : {}),
     ...(bannerUrl ? { bannerUrl } : {}),
+    ...(bannerText ? { bannerText } : {}),
   };
 }
 
@@ -369,7 +373,7 @@ export async function getCouponsByOfferHub(
 
   return coupons.filter(
     (coupon) =>
-      coupon.offerType === hub.type &&
+      (coupon.offerType === hub.type || coupon.offerType === "common") &&
       (coupon.category === hub.category || coupon.category === "공통"),
   );
 }

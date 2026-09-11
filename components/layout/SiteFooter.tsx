@@ -30,7 +30,7 @@ export function SiteFooter({
         }`}
       >
         <nav aria-label="플랫폼 할인코드">
-          <p className="font-serif text-sm font-semibold text-deep-navy">
+          <p className="font-sans text-sm font-semibold text-deep-navy">
             플랫폼
           </p>
           <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2">
@@ -45,7 +45,7 @@ export function SiteFooter({
         </nav>
 
         <nav aria-label="상품별 할인코드">
-          <p className="font-serif text-sm font-semibold text-deep-navy">
+          <p className="font-sans text-sm font-semibold text-deep-navy">
             상품별
           </p>
           <ul className="mt-3 space-y-2">
@@ -87,7 +87,7 @@ export function SiteFooter({
         </nav>
 
         <nav aria-label="사이트 정보">
-          <p className="font-serif text-sm font-semibold text-deep-navy">
+          <p className="font-sans text-sm font-semibold text-deep-navy">
             코드세이아
           </p>
           <ul className="mt-3 space-y-2">

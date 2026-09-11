@@ -17,7 +17,6 @@ interface StickyPageChromeProps {
   listedPlatforms: PlatformInfo[];
   headingAs?: "h1" | "p";
   pageTitle?: string;
-  pageDescription?: string;
   updatedLabel?: string;
 }
 
@@ -29,7 +28,6 @@ export function StickyPageChrome({
   listedPlatforms,
   headingAs,
   pageTitle,
-  pageDescription,
   updatedLabel,
 }: StickyPageChromeProps) {
   const [compact, setCompact] = useState(false);
@@ -116,7 +114,6 @@ export function StickyPageChrome({
           onMenuToggle={() => setMenuOpen((open) => !open)}
           headingAs={headingAs}
           pageTitle={pageTitle}
-          pageDescription={pageDescription}
           updatedLabel={updatedLabel}
           reviewProgress={
             reviewProgress

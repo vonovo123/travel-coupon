@@ -3,7 +3,7 @@ export type Platform = string;
 export type Category = "국내" | "해외" | "공통";
 
 /** 상품 유형. 허브 URL은 국내/해외와 조합한다. 예: /overseas-stay */
-export type OfferType = "stay" | "tour" | "flight" | "package";
+export type OfferType = "stay" | "tour" | "flight" | "package" | "common";
 
 /** 상품 허브는 국내·해외만 나눈다. 쿠폰 category `공통`은 양쪽 페이지에 같이 둔다. */
 export type HubRegion = Exclude<Category, "공통">;
@@ -31,6 +31,8 @@ export interface PlatformInfo {
   imageUrl?: string;
   /** 본문 상단 와이드 배너. */
   bannerUrl?: string;
+  /** 배너 위에 겹치는 안내. 없으면 코드가 만든 문장을 쓴다. */
+  bannerText?: string;
   /** false면 메뉴·사이트맵에서 숨기고 noindex. 직접 URL은 유지. */
   listed: boolean;
 }

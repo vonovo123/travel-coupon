@@ -18,20 +18,18 @@ module.exports = {
       },
       fontFamily: {
         sans: [
-          "Pretendard Variable",
-          "Pretendard",
+          "var(--font-sans)",
           "Apple SD Gothic Neo",
           "Noto Sans KR",
           "system-ui",
           "sans-serif",
         ],
         serif: [
-          "var(--font-serif)",
-          "Noto Serif KR",
-          "Apple Myungjo",
-          "Nanum Myeongjo",
-          "Georgia",
-          "serif",
+          "var(--font-sans)",
+          "Apple SD Gothic Neo",
+          "Noto Sans KR",
+          "system-ui",
+          "sans-serif",
         ],
       },
       boxShadow: {

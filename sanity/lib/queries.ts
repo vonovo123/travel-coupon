@@ -7,7 +7,9 @@ export const platformsQuery = groq`*[_type == "platform" && defined(slug.current
   initial,
   color,
   listed,
-  "imageUrl": image.asset->url
+  "imageUrl": image.asset->url,
+  "bannerUrl": banner.asset->url,
+  bannerText
 }`;
 
 export const offerMenusQuery = groq`*[_type == "offerMenu" && defined(slug.current)] | order(sortOrder asc, name asc) {
@@ -40,6 +42,8 @@ export const couponsQuery = groq`*[_type == "coupon" && defined(platform)] | ord
     initial,
     color,
     listed,
-    "imageUrl": image.asset->url
+    "imageUrl": image.asset->url,
+    "bannerUrl": banner.asset->url,
+    bannerText
   }
 }`;

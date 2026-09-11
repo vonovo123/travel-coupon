@@ -25,7 +25,7 @@ export default async function NotFound() {
     >
       <main>
         <p className="text-sm text-starlight-gold">404</p>
-        <h1 className="mt-2 font-serif text-2xl font-semibold text-deep-navy sm:text-3xl">
+        <h1 className="mt-2 font-sans text-2xl font-semibold text-deep-navy sm:text-3xl">
           이 항로는 없습니다
         </h1>
         <p className="mt-3 max-w-xl text-sm leading-relaxed text-deep-navy/70">

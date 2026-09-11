@@ -16,7 +16,7 @@ export function DiscountBanner({ src, alt, lead, meta }: DiscountBannerProps) {
   }
 
   return (
-    <figure className="relative mb-4 h-52 w-full overflow-hidden bg-deep-navy/5 sm:h-auto sm:aspect-[2.4/1]">
+    <figure className="relative mb-4 h-56 w-full overflow-hidden bg-deep-navy/5 sm:h-auto sm:aspect-[2.4/1]">
       <Image
         src={imageSrc}
         alt={alt}
@@ -26,12 +26,18 @@ export function DiscountBanner({ src, alt, lead, meta }: DiscountBannerProps) {
         className="object-cover object-center"
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-deep-navy via-deep-navy/45 to-transparent"
+        className="pointer-events-none absolute inset-0 bg-deep-navy/35"
         aria-hidden
       />
-      <figcaption className="absolute inset-x-0 bottom-0 px-4 py-3 sm:px-5 sm:py-4">
-        <p className="text-sm leading-relaxed text-parchment">{lead}</p>
-        <p className="mt-1 text-xs text-parchment/75">{meta}</p>
+      <figcaption className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-5 text-center sm:px-8">
+        {lead ? (
+          <p className="max-w-xl text-base font-semibold leading-snug text-parchment [text-shadow:0_1px_8px_rgba(11,19,43,0.55)] sm:text-lg md:text-xl">
+            {lead}
+          </p>
+        ) : null}
+        <p className="rounded-full border border-parchment/80 bg-transparent px-2.5 py-0.5 text-[11px] leading-none text-parchment sm:text-xs">
+          {meta}
+        </p>
       </figcaption>
     </figure>
   );

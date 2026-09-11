@@ -97,7 +97,7 @@ export function CouponCard({ coupon, headingAs = "h2" }: CouponCardProps) {
           className="h-12 w-12"
           imageClassName="object-cover"
         />
-        <Heading className="min-w-0 flex-1 break-keep font-serif text-base font-semibold leading-snug text-deep-navy">
+        <Heading className="min-w-0 flex-1 break-keep font-sans text-base font-semibold leading-snug text-deep-navy">
           {coupon.title}
         </Heading>
       </div>

@@ -22,7 +22,7 @@ export function SimplePageFrame({
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 sm:px-6">
           <Link
             href="/"
-            className="flex items-center gap-2 font-serif text-lg tracking-tight text-starlight-gold sm:text-xl"
+            className="flex items-center gap-2 font-sans text-lg font-semibold tracking-tight text-starlight-gold sm:text-xl"
           >
             <Compass className="h-5 w-5" aria-hidden />
             코드세이아

@@ -39,6 +39,7 @@ const platformIcons = {
 } as const;
 
 const offerTypeIcons: Record<OfferType, typeof BedDouble> = {
+  common: Compass,
   stay: BedDouble,
   tour: Ticket,
   flight: Plane,
@@ -100,7 +101,7 @@ export function PlatformSidebar({
       </Link>
 
       <p
-        className={`font-serif text-deep-navy/45 ${
+        className={`font-sans text-deep-navy/45 ${
           dense ? "mt-1 text-[11px]" : "mt-1 text-xs"
         }`}
       >
@@ -154,7 +155,7 @@ export function PlatformSidebar({
       })}
 
       <p
-        className={`font-serif text-deep-navy/45 ${
+        className={`font-sans text-deep-navy/45 ${
           dense ? "mt-1 text-[11px]" : "mt-1 text-xs"
         }`}
       >

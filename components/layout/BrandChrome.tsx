@@ -19,9 +19,8 @@ interface BrandChromeProps {
   };
   /** 로딩 화면은 H1을 쓰지 않아 본문 제목과 겹치지 않게 한다. */
   headingAs?: "h1" | "p";
-  /** H1/설명은 쿠폰 데이터로 만든 검색용 카피를 쓴다. */
+  /** H1은 쿠폰 데이터로 만든 검색용 카피를 쓴다. */
   pageTitle?: string;
-  pageDescription?: string;
   updatedLabel?: string;
 }
 
@@ -38,7 +37,6 @@ export function BrandChrome({
   reviewProgress,
   headingAs = "h1",
   pageTitle,
-  pageDescription,
   updatedLabel,
 }: BrandChromeProps) {
   const { year, month } = getFreshness();
@@ -49,13 +47,6 @@ export function BrandChrome({
       : platform
         ? `${year}년 ${month}월 ${platform.name} 할인코드`
         : `${year}년 ${month}월 코드세이아 여행 후기`;
-  const description = pageDescription
-    ? pageDescription
-    : offerHub
-      ? `${year}년 ${month}월 기준. ${offerHub.shortDescription}`
-      : platform
-        ? `${year}년 ${month}월 기준. ${platform.name}의 숨겨진 할인 코드를 복사한 다음 결제창에 붙여넣으면 됩니다.`
-        : "코드세이아에 모은 여행 후기입니다. 카드를 누르면 원문으로 이동합니다. 할인코드는 메뉴에서 국내·해외 상품 또는 플랫폼을 골라 확인하세요.";
   const badge = updatedLabel
     ? `최종 업데이트 · ${updatedLabel}`
     : offerHub
@@ -82,7 +73,7 @@ export function BrandChrome({
             <Link
               href="/"
               aria-current={!currentSlug ? "page" : undefined}
-              className="flex shrink-0 items-center gap-2 font-serif text-lg tracking-tight text-starlight-gold sm:text-xl"
+              className="flex shrink-0 items-center gap-2 font-sans text-lg font-semibold tracking-tight text-starlight-gold sm:text-xl"
             >
               <Compass className="h-5 w-5" aria-hidden />
               코드세이아
@@ -118,7 +109,7 @@ export function BrandChrome({
               className={
                 compact
                   ? "sr-only"
-                  : "sr-only break-keep font-serif font-semibold text-white md:relative md:mt-3 md:h-auto md:w-auto md:overflow-visible md:whitespace-normal md:p-0 md:m-0 md:text-xl md:[clip:auto] lg:text-2xl"
+                  : "sr-only break-keep font-sans font-semibold text-white md:relative md:mt-3 md:h-auto md:w-auto md:overflow-visible md:whitespace-normal md:p-0 md:m-0 md:text-xl md:[clip:auto] lg:text-2xl"
               }
             >
               {heading}
@@ -128,18 +119,12 @@ export function BrandChrome({
               className={
                 compact
                   ? "sr-only"
-                  : "sr-only break-keep font-serif font-semibold text-white md:relative md:mt-3 md:h-auto md:w-auto md:overflow-visible md:whitespace-normal md:p-0 md:m-0 md:text-xl md:[clip:auto] lg:text-2xl"
+                  : "sr-only break-keep font-sans font-semibold text-white md:relative md:mt-3 md:h-auto md:w-auto md:overflow-visible md:whitespace-normal md:p-0 md:m-0 md:text-xl md:[clip:auto] lg:text-2xl"
               }
             >
               {heading}
             </p>
           )}
-
-          {!compact ? (
-            <p className="mt-1.5 hidden text-xs leading-relaxed text-white/75 md:block sm:text-sm">
-              {description}
-            </p>
-          ) : null}
 
           <p
             className={`inline-flex w-fit max-w-full items-center gap-2 self-start rounded-sm border border-starlight-gold/40 bg-deep-navy/40 text-starlight-gold ${collapse} ${

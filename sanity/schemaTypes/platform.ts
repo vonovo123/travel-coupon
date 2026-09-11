@@ -87,6 +87,20 @@ export const platformType = defineType({
       ],
     }),
     defineField({
+      name: "banner",
+      title: "페이지 배너",
+      type: "image",
+      description: "할인코드 목록 위에 가로로 크게 보입니다.",
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: "bannerText",
+      title: "배너 문구",
+      type: "text",
+      rows: 3,
+      description: "배너 아래쪽에 겹쳐 보입니다. 비우면 자동 안내 문장을 씁니다.",
+    }),
+    defineField({
       name: "color",
       title: "브랜드 색",
       type: "string",

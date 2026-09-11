@@ -136,7 +136,6 @@ export async function SitePage({
         listedOfferMenus={listedOfferMenus}
         listedPlatforms={listedPlatforms}
         pageTitle={isHome ? undefined : pageTitle}
-        pageDescription={isHome ? undefined : jsonLdDescription}
         updatedLabel={isHome ? undefined : updatedLabel}
       />
 
@@ -158,19 +157,16 @@ export async function SitePage({
                   <DiscountBanner
                     src={platform.bannerUrl}
                     alt={discountImageAlt({ platformName: platform.name })}
-                    lead={pageLead}
-                    meta={`최종 업데이트: ${updatedLabel}${
-                      coupons.length > 0 ? ` · 혜택 ${coupons.length}개` : ""
-                    }`}
+                    lead={platform.bannerText || pageLead}
+                    meta={`최종 업데이트: ${updatedLabel}`}
                   />
                 ) : (
                   <>
                     <p className="mb-3 text-sm leading-relaxed text-deep-navy/70">
-                      {pageLead}
+                      {platform?.bannerText || pageLead}
                     </p>
                     <p className="mb-4 text-sm text-deep-navy/55">
                       최종 업데이트: {updatedLabel}
-                      {coupons.length > 0 ? ` · 혜택 ${coupons.length}개` : ""}
                     </p>
                   </>
                 )}

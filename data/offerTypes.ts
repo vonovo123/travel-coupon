@@ -8,13 +8,14 @@ import type {
 } from "@/types/coupon";
 
 export const offerTypeNames: Record<OfferType, string> = {
+  common: "공통",
   stay: "숙소",
   tour: "투어",
   flight: "항공",
   package: "패키지",
 };
 
-const offerNouns: Record<OfferType, string> = {
+const offerNouns: Record<Exclude<OfferType, "common">, string> = {
   stay: "호텔·모텔·펜션·에어비앤비",
   tour: "투어·액티비티·입장권",
   flight: "항공권",
@@ -27,7 +28,12 @@ const hubRegions: Array<{ category: HubRegion; slugPrefix: "overseas" | "korea" 
     { category: "국내", slugPrefix: "korea" },
   ];
 
-const offerTypes: OfferType[] = ["stay", "tour", "flight", "package"];
+const offerTypes: Exclude<OfferType, "common">[] = [
+  "stay",
+  "tour",
+  "flight",
+  "package",
+];
 
 function buildOfferHub(
   type: OfferType,
@@ -105,6 +111,7 @@ export function getFaqsByOfferHub(hub: OfferTypeInfo): FaqItem[] {
   const tourNoun = category === "국내" ? "제주·부산 액티비티" : "투어·입장권";
 
   const byType: Record<OfferType, FaqItem[]> = {
+    common: [],
     stay: [
       {
         id: `faq-${slug}-where`,

@@ -39,7 +39,7 @@ export function SeoContentSection({
         <section className="mt-6" aria-labelledby="page-faq-heading">
           <h2
             id="page-faq-heading"
-            className="font-serif text-sm font-semibold text-deep-navy/70"
+            className="font-sans text-sm font-semibold text-deep-navy/70"
           >
             {faqHeading}
           </h2>
@@ -49,7 +49,7 @@ export function SeoContentSection({
                 key={faq.id}
                 className="border border-deep-navy/10 bg-parchment px-4 py-3"
               >
-                <h3 className="break-keep font-serif text-base font-semibold leading-snug text-deep-navy">
+                <h3 className="break-keep font-sans text-base font-semibold leading-snug text-deep-navy">
                   {faq.question}
                 </h3>
                 <p className="mt-1.5 text-sm leading-relaxed text-deep-navy/75">
@@ -65,14 +65,14 @@ export function SeoContentSection({
         <SeoDisclosure summary={summary}>
           {guides.length > 0 ? (
             <section>
-              <h2 className="font-serif text-sm font-semibold text-deep-navy/80">
+              <h2 className="font-sans text-sm font-semibold text-deep-navy/80">
                 {guideHeading}
               </h2>
               <div className="mt-1">
                 {guides.map((guide) => (
                   <SeoAccordionItem key={guide.id} title={guide.title}>
                     {showPlatformLabel ? (
-                      <h3 className="mb-1 font-serif text-[13px] font-semibold text-deep-navy/75">
+                      <h3 className="mb-1 font-sans text-[13px] font-semibold text-deep-navy/75">
                         {guide.platform}
                       </h3>
                     ) : null}
@@ -85,7 +85,7 @@ export function SeoContentSection({
 
           {paymentTips.length > 0 ? (
             <section>
-              <h2 className="font-serif text-sm font-semibold text-deep-navy/80">
+              <h2 className="font-sans text-sm font-semibold text-deep-navy/80">
                 {paymentHeading}
               </h2>
               <div className="mt-1">

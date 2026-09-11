@@ -18,14 +18,14 @@ export default async function PrivacyPage() {
     >
       <article className="max-w-2xl space-y-8 text-sm leading-relaxed text-deep-navy/75">
         <header>
-          <h1 className="font-serif text-2xl font-semibold text-deep-navy sm:text-3xl">
+          <h1 className="font-sans text-2xl font-semibold text-deep-navy sm:text-3xl">
             개인정보 처리방침·제휴 고지
           </h1>
           <p className="mt-2 text-deep-navy/50">시행일: 2026년 9월 9일</p>
         </header>
 
         <section>
-          <h2 className="font-serif text-lg font-semibold text-deep-navy">
+          <h2 className="font-sans text-lg font-semibold text-deep-navy">
             제휴 고지
           </h2>
           <p className="mt-2">
@@ -42,7 +42,7 @@ export default async function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-lg font-semibold text-deep-navy">
+          <h2 className="font-sans text-lg font-semibold text-deep-navy">
             수집하는 정보
           </h2>
           <p className="mt-2">
@@ -57,7 +57,7 @@ export default async function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-lg font-semibold text-deep-navy">
+          <h2 className="font-sans text-lg font-semibold text-deep-navy">
             외부 콘텐츠
           </h2>
           <p className="mt-2">
@@ -68,7 +68,7 @@ export default async function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-lg font-semibold text-deep-navy">
+          <h2 className="font-sans text-lg font-semibold text-deep-navy">
             문의
           </h2>
           <p className="mt-2">
